@@ -18,7 +18,7 @@ const Home = () => {
   })
 
   const { nome } = useLocalSearchParams();
-  const estadoConexao = true;
+  const estadoConexao = false;
 
   const showToast = () => {
     Toast.show({
@@ -33,19 +33,19 @@ const Home = () => {
         <ScrollView>
           <Image 
               source={images.bghome1}
-              className="w-[150vw] h-[100vh] -mt-14 -ml-10 absolute overflow-hidden"
+              className="w-[150vw] h-[80vh] -mt-14 -ml-10 absolute overflow-hidden"
               resizeMode="cover"
             />
 
             <Text
-            className="text-3xl font-bold text-white mt-10 pl-2 ml-10 text-left"
+            className="text-3xl font-bold text-white mt-10 pl-2 ml-10 text-left bg-third rounded-xl w-[80vw]"
             >Bem-vindo, {nome}!
             </Text>
 
           <View className="w-full items-center min-h-[85vh] px-4">
 
-          <View className="w-[80vw] h-[40vh] mt-5 mb-10 rounded-xl border-4
-            justify-start flex-row">
+          <View className="w-[80vw] h-[30vh] mt-5 mb-10
+            justify-start flex-row bg-fifth rounded-2xl">
               {estadoConexao ? 
                 <View className="w-[39vw] justify-center">
                   <Image 
@@ -56,32 +56,32 @@ const Home = () => {
                 </View>
               : <View className="w-[39vw] justify-center">
                   <Image 
-                    source={images.bghome1}
-                    className="w-[150vw] h-[100vh] -mt-14 -ml-10 absolute overflow-hidden"
-                    resizeMode="cover"
+                    source={images.foxHappy}
+                    className="w-[50vw] -ml-7 absolute"
+                    resizeMode="contain"
                   />
                 </View>}
               {estadoConexao ? 
-                <View className="w-[39vw]">
+                <View className="w-[39vw] pl-1 bg-third rounded-xl h-[20vh] mt-10 justify-center">
                   <Text
-                  className="text-3xl font-bold text-white text-left mt-5"
+                  className="text-3xl font-bold text-white text-center"
                   >Sucesso!
                   </Text>
                   <Text
-                  className="text-xl font-bold text-white text-left mt-5 mr-3"
+                  className="text-xl font-bold text-white text-left mt-5 mr-3 pl-1"
                   >Seu brinquedo está conectado!
                   </Text>
                 </View> :
-                    <View className="w-[39vw]">
+                    <View className="w-[39vw] pl-1 bg-third rounded-xl h-[22vh] mt-10">
                       <Text
-                      className="text-2xl font-bold text-white text-left mt-5"
-                      >Parece que você ainda não conectou seu brinquedo
+                      className="text-xl font-bold text-white text-left pl-1"
+                      >Parece que você ainda não conectou seu brinquedo!
                       </Text>
                       <View>
                         <CustomButton 
                           title="Conectar"
                           handlePress={() => router.push('/sign-in')}
-                          containerStyles="w-[35vw] mt-5 border-2 border-third rounded-2xl bg-white"
+                          containerStyles="w-[35vw] mt-2 border-2 border-third rounded-3xl bg-white"
                           textStyles="text-third"
                         />
                       </View>
