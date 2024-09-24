@@ -11,6 +11,11 @@ import logout from "../assets/icons/logout.png";
 import eyeHide from "../assets/icons/eye-hide.png";
 import eye from "../assets/icons/eye.png";
 import play from "../assets/icons/play.png";
+import notifications from "../assets/icons/notifications.png";
+import config from "../assets/icons/config.png";
+import pencil from "../assets/icons/pencil.png";
+import interrogation from "../assets/icons/interrogation.png";
+import notebook from "../assets/icons/notebook.png";
 
 export default {
   play,
@@ -26,4 +31,9 @@ export default {
   logout,
   eyeHide,
   eye,
+  notifications,
+  config,
+  pencil,
+  interrogation,
+  notebook,
 };

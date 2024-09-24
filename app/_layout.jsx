@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { SplashScreen, Stack } from 'expo-router';
+import { Text, View } from 'react-native'
+import { SplashScreen, Stack} from 'expo-router';
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 
@@ -29,7 +29,7 @@ const RootLayout = () => {
   }, [fontsLoaded, error]);
   
   if (!fontsLoaded && !error) {
-    return null;
+    return <View><Text>Loading...</Text></View>;
   }
 
 
@@ -38,7 +38,6 @@ const RootLayout = () => {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        {/* <Stack.Screen name="/search/[query]" options={{ headerShown: false }} />*/}
       </Stack>
   )
 }

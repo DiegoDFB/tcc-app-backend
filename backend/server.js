@@ -24,7 +24,11 @@ app.post('/login', (req, res) => {
       return res.status(500).json({ error: err.message });
     }
     if (results.length > 0) {
-      res.json({ success: true });
+      const userData = results[0]; // assuming only one user with the given email and password
+      res.json({
+        success: true,
+        nome: userData.nome
+      });
     } else {
       res.status(401).json({ error: 'Email ou senha incorretos' });
     }
@@ -32,15 +36,15 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-    const { email, password } = req.body;
+    const { nome, sobrenome, email, password } = req.body;
   
     // Validar se o email e a senha são fornecidos
-    if (!email || !password) {
+    if (!nome || !sobrenome || !email || !password) {
       return res.status(400).json({ error: 'Email e senha são obrigatórios' });
     }
   
     // Inserir o usuário no banco de dados
-    pool.query('INSERT INTO users (email, password) VALUES (?, ?)', [email, password], (err, results) => {
+    pool.query('INSERT INTO users (nome, sobrenome, email, password) VALUES (?, ?, ?, ?)', [nome, sobrenome, email, password], (err, results) => {
       if (err) {
         console.error('Erro ao inserir no banco de dados:', err);
         return res.status(500).json({ error: 'Erro interno do servidor' });

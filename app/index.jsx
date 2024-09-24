@@ -1,52 +1,68 @@
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView, Text, View, Image } from 'react-native';
-import { Redirect, router } from 'expo-router';
+import { Redirect, router, useRouter } from 'expo-router';
 import { useFonts } from 'expo-font'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../constants'
 import CustomButton from '../components/CustomButton';
+import { LinearGradient } from 'expo-linear-gradient';
+import Toast from 'react-native-toast-message';
+import { RootSiblingParent } from "react-native-root-siblings";
 
-export default function App() {
+export default function App(props) {
+
+  const router = useRouter();
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <>
+    <SafeAreaView className="bg-third h-full">
       <ScrollView contentContainerStyle={{ height: '100%' }}>
-        <View className="w-full justify-center items-center min-h-[85vh] px-4">
-          <Image 
-            source={images.logo}
-            className="w-[130px] h-[84px]"
-            resizeMode="contain"
-          />
+        <LinearGradient
+          colors={['rgba(250,198,142,1)', 'rgba(240,129,48,1)']}
+          className="w-full h-full absolute"
+        />
 
-          <Image 
-            source={images.cards}
-            className="max-w-[380px] w-full h-[300px]"
-            resizeMode="contain"
+        <Image 
+            source={images.homeScreen}
+            className="w-[100vw] h-[400px] mt-8"
+            resizeMode="cover"
           />
+        <LinearGradient 
+        colors={['rgba(240,129,48,1)', 'rgba(250,198,142,1)']}
+        className="w-full -mt-5 align-bottom items-center min-h-[85vh] px-4 rounded-xl border-2 border-white">
+          
 
-          <View className="relative mt-5">
+          <View className="relative mt-2">
             <Text className="text-3xl text-white font-bold text-center">
               Aprendizado e diversão com {''}
-              <Text className="text-secondary-200">Fellow Fox</Text>
+              <Text className="text-fourth">Fellow Fox</Text>
             </Text>
 
           </View>
 
           <Text
-          className="text-sm font-pregular text-gray-100 mt-7 text-center"
-          >Estimule a educação e o aprendizado com lições lúdicas e divertidas.
+          className="text-xl font-bold text-white mt-2 text-center"
+          >Estimule o aprendizado da matemática com lições lúdicas e divertidas.
           </Text>
 
           <CustomButton 
             title="Entrar com Email"
-            handlePress={() => router.push('/sign-in')}
-            containerStyles="w-[60vw] mt-7"
+            handlePress={() => {
+              if (router) {
+                router.push('/sign-in');
+              } else {
+                console.error("Router object is null");
+              }
+            }}
+            containerStyles="w-[60vw] mt-5 bg-white"
+            textStyles="text-third"
           />
-        </View>
+        </LinearGradient>
       </ScrollView>
 
-      <StatusBar backgroundColor='#FF8229' 
-      style='light' />
+      <StatusBar hidden />
     </SafeAreaView>
+    <Toast />
+    </>
   );
 }

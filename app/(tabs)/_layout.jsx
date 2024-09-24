@@ -1,5 +1,5 @@
 import { Text, View, Image } from 'react-native'
-import { Tabs, Redirect } from 'expo-router'
+import { Tabs } from 'expo-router'
 
 import { icons } from '../../constants'
 
@@ -26,11 +26,11 @@ const TabsLayout = () => {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarActiveTintColor: '#FF8229',
-        tabBarInactiveTintColor: '#CDCDE0',
+        tabBarInactiveTintColor: '#A0A0AD',
         tabBarStyle: {
-          backgroundColor: '#161622',
+          backgroundColor: '#FFF',
           borderTopWidth: 1,
-          borderTopColor: '#232533',
+          borderTopColor: '#FFF',
           height: 84,
         }
       }}>
@@ -50,6 +50,36 @@ const TabsLayout = () => {
         }}
         />
         <Tabs.Screen 
+        name="notifications"
+        options={{
+          title: 'Notifications',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon 
+              icon={icons.notifications}
+              color={color}
+              name="Notificações"
+              focused={focused}
+            />
+          )
+        }}
+        />
+        <Tabs.Screen 
+        name="options"
+        options={{
+          title: 'Options',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon 
+              icon={icons.config}
+              color={color}
+              name="Opções"
+              focused={focused}
+            />
+          )
+        }}
+        />
+        <Tabs.Screen 
         name="profile"
         options={{
           title: 'Profile',
@@ -59,21 +89,6 @@ const TabsLayout = () => {
               icon={icons.profile}
               color={color}
               name="Perfil"
-              focused={focused}
-            />
-          )
-        }}
-        />
-        <Tabs.Screen 
-        name="bookmark"
-        options={{
-          title: 'Bookmark',
-          headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon 
-              icon={icons.menu}
-              color={color}
-              name="Opções"
               focused={focused}
             />
           )

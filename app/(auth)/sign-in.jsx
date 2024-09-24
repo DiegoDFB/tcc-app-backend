@@ -3,28 +3,47 @@ import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
 import CustomButton from '../../components/CustomButton'
-import { Link, router } from 'expo-router'
+import { Link, router, useRouter } from 'expo-router'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { icons } from '../../constants'
 import axios from 'axios';
+import Toast from 'react-native-toast-message'
+import { RootSiblingParent } from "react-native-root-siblings";
+
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required('É obrigatório inserir um endereço de email').email('É necessário inserir um email válido').label("Email"),
   password: Yup.string().required('É obrigatório inserir uma senha').min(4, 'A senha deve ter pelo menos 4 caracteres').label("Password"),
 })
 
+const showToast = () => {
+  Toast.show({
+    type: 'success',
+    text1: 'Login feito com sucesso',
+    text2: 'Seja bem-vindo! 👋'
+  });
+}
+
 const SignIn = () => {
+
+  const router = useRouter();
 
   const [showPassword, setshowPassword] = useState(false)
 
   const handleLogin = async (values) => {
     try {
-      const response = await axios.post('http://192.168.0.146:3000/login', values);
-      if (response.data.success) {
-        router.push("/(tabs)/home");
+      const response = await axios.post('http://192.168.0.146:3000/login', { ...values });
+      if (response?.data?.success) {
+        if (router && router.push) {
+          router.push({
+            pathname:"/(tabs)/home",
+            params: { nome: response?.data?.nome } });
+        } else {
+          console.error("Router object is null");
+        }
       } else {
-        alert(response.data.error);
+        alert(response?.data?.error || 'Email ou senha incorretos. Tente novamente.');
       }
     } catch (error) {
       console.error(error);
@@ -32,98 +51,101 @@ const SignIn = () => {
     }
   };
 
-  return (
-    <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
-        <View className="w-full justify-center min-h-[10vh] px-4 my-6">
+  return <RootSiblingParent>
+      <SafeAreaView className="bg-white h-full">
+        <ScrollView>
           <Image 
-          source={images.logo}
-          resizeMode='contain'
-          className="w-[105px] h=[25px]" />
+              source={images.foxLogin}
+              className="w-[100vw] h-[300px]"
+              resizeMode="contain"
+            />
+          <View className="w-full justify-center min-h-[10vh] px-4 my-6">
 
-          <Text
-          className="text-2xl text-white text-semibold font-psemibold"
-          >Entre em sua conta
-          </Text>
-          <Formik
-            initialValues={{ email: "", password: "" }}
-            onSubmit={handleLogin}
-            validationSchema={validationSchema}
-          >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              errors,
-              touched,
-            })=>(
-              <View>
-                <View className={`space-y-2 mt-7`}>
-                  <Text className="text-base text-gray-100 font-pmedium">Email</Text>
-
-                  <View className="border-2 border-black-200 w-full h-16 px-4 
-                  bg-black-100 rounded-2xl focus:border-secondary items-center flex-row">
-                    <TextInput 
-                        className="flex-1 text-white font-psemibold text-base"
-                        value={values.email}
-                        onChangeText={handleChange("email")}
-                        onBlur={handleBlur("email")}
-                        keyboardType="email-address"
-                    />
-                  </View>
-                </View>
-                {errors.email && touched.email && (
-                  <Text 
-                  className="text-sm text-red-500 text-semibold font-psemibold mt-2"
-                  >{errors.email}</Text>
-                )}
-
-                <View className={`space-y-2 mt-7`}>
-                  <Text className="text-base text-gray-100 font-pmedium">Senha</Text>
-
-                  <View className="border-2 border-black-200 w-full h-16 px-4 
-                  bg-black-100 rounded-2xl focus:border-secondary items-center flex-row">
-                    <TextInput 
-                        className="flex-1 text-white font-psemibold text-base"
-                        value={values.password}
-                        onChangeText={handleChange("password")}
-                        onBlur={handleBlur("password")}
-                        secureTextEntry={!showPassword}
-                    />
-                    <TouchableOpacity onPress={() => setshowPassword(!showPassword)}>
-                        <Image source={!showPassword ? icons.eye : icons.eyeHide} className="w-6 h-6"
-                        resizeMode='contain' />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                {errors.password && touched.password && (
-                  <Text 
-                  className="text-sm text-red-500 text-semibold font-psemibold mt-2"
-                  >{errors.password}</Text>
-                )}
-
-                <CustomButton
-                  title="Entrar"
-                  handlePress={handleSubmit}
-                  containerStyles="mt-10"
-                />
-
-                </View>
-            )
-            }
-          </Formik>
-
-          <View className="justify-center pt-5 flex-row gap-2">
-            <Text className="text-lg text-gray-100 font-pregular">
-              Não possui conta?
+            <Text
+            className="text-2xl text-black text-semibold font-psemibold"
+            >Entre em sua conta
             </Text>
-            <Link href="/sign-up" className='text-lg font-semibold text-secondary'>Registre-se</Link>
+            <Formik
+              initialValues={{ email: "difrancisblanco@gmail.com", password: "didi2006" }}
+              onSubmit={handleLogin}
+              validationSchema={validationSchema}
+            >
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              })=>(
+                <View>
+                  <View className={`space-y-2 mt-3`}>
+
+                    <View className="border-2 border-gray-300 w-full h-16 px-4 
+                    bg-white rounded-2xl focus:border-secondary items-center flex-row">
+                      <TextInput 
+                          className="flex-1 text-black font-psemibold text-base"
+                          value={values.email}
+                          onChangeText={handleChange("email")}
+                          onBlur={handleBlur("email")}
+                          keyboardType="email-address"
+                          placeholder='Email'
+                      />
+                    </View>
+                  </View>
+                  {errors.email && touched.email && (
+                    <Text 
+                    className="text-sm text-red-500 ml-2 text-semibold font-psemibold mt-2"
+                    >{errors.email}</Text>
+                  )}
+
+                  <View className={`space-y-2 mt-3`}>
+
+                    <View className="border-2 border-gray-300 w-full h-16 px-4 
+                    bg-white rounded-2xl focus:border-secondary items-center flex-row">
+                      <TextInput 
+                          className="flex-1 text-black font-psemibold text-base"
+                          value={values.password}
+                          onChangeText={handleChange("password")}
+                          onBlur={handleBlur("password")}
+                          secureTextEntry={!showPassword}
+                          placeholder='Senha'
+                      />
+                      <TouchableOpacity onPress={() => setshowPassword(!showPassword)}>
+                          <Image source={!showPassword ? icons.eye : icons.eyeHide} className="w-6 h-6"
+                          resizeMode='contain' />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  {errors.password && touched.password && (
+                    <Text 
+                    className="text-sm text-red-500 ml-2 text-semibold font-psemibold mt-2"
+                    >{errors.password}</Text>
+                  )}
+
+                  <CustomButton
+                    title="Entrar"
+                    handlePress={handleSubmit}
+                    containerStyles="mt-5 bg-third"
+                    textStyles="text-white"
+                  />
+
+                  </View>
+              )
+              }
+            </Formik>
+
+            <View className="justify-center pt-5 flex-row gap-2">
+              <Text className="text-lg text-gray-400 font-pregular">
+                Não possui conta?
+              </Text>
+              <Link href="/sign-up" className='text-lg font-pregular text-third'>Registre-se</Link>
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  )
+        </ScrollView>
+      </SafeAreaView>
+      <Toast visible={true} >Hello !</Toast>
+    </RootSiblingParent>
 }
 
 export default SignIn
