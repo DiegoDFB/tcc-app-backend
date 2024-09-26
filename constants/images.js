@@ -11,7 +11,8 @@ import foxLogin from "../assets/images/foxLogin.png";
 import foxHappy from "../assets/images/foxHappy.png";
 import perfilGlasses from "../assets/images/foxPerfilGlasses.png";
 import perfilHeadphones from "../assets/images/foxPerfilHeadphones.png";
+import foxFemale from "../assets/images/foxFemale.png";
 
 export default { profile, thumbnail, cards, path, logo, logoSmall, empty, bghome1, homeScreen, foxLogin,
-    foxHappy, perfilGlasses, perfilHeadphones
+    foxHappy, perfilGlasses, perfilHeadphones, foxFemale,
  };

@@ -18,37 +18,27 @@ const Profile = () => {
   const imagePaths = [
     require('../../assets/images/foxPerfilGlasses.png'),
     require('../../assets/images/foxPerfilHeadphones.png'),
+    require('../../assets/images/foxFemale.png'),
   ];
 
   const [profileSelected, setProfileSelected] = useState(0);
   const [lastSelect, setLastSelect] = useState(1);
   const [firstSelect, setFirstSelect] = useState(0);
   const [selecting, setSelecting] = useState(0);
+  const [buttonCool, setButtonCool] = useState(0);
 
   useEffect(()=>{
     if (profileSelected === 0) {
-      setTimeout(() => {
-        setLastSelect(true);
-      }, 800);
-      setTimeout(() => {
-        setFirstSelect(false);
-      }, 800);
+      setLastSelect(true);
+      setFirstSelect(false);
     }
-    else if (profileSelected === 1) {
-      setTimeout(() => {
-        setLastSelect(false);
-      }, 800);
-      setTimeout(() => {
-        setFirstSelect(true);
-      }, 800);
+    else if (profileSelected === 2) {
+      setLastSelect(false);
+      setFirstSelect(true);
     }
     else {
-      setTimeout(() => {
-        setLastSelect(false);
-      }, 800);
-      setTimeout(() => {
-        setFirstSelect(false);
-      }, 800);
+      setLastSelect(true);
+      setFirstSelect(true);
     }
   },[profileSelected, selecting])
 
@@ -57,26 +47,49 @@ const Profile = () => {
   };
   
   const addPic = () => {
-    if (profileSelected !== 1) {
+    if (profileSelected !== 2 && buttonCool === 0) {
+      setButtonCool(1);
+      setTimeout(() => {
+        setButtonCool(0);
+      }, 1000);
       setProfileSelected(profileSelected + 1);
       translateX.value = withSpring(translateX.value - 190);
-      width.value = withSpring(width.value - 60);
-      height.value = withSpring(height.value + 60);
+
+      if (profileSelected === 0) {
+        width.value = withSpring(width.value - 60);
+        height.value = withSpring(height.value + 60);
+      }
+      if (profileSelected === 1) {
+        height.value = withSpring(height.value - 60);
+        height2.value = withSpring(height.value + 60);
+      }
     }
   };
   
   const subPic = () => {
-    if (profileSelected !== 0) {
+    if (profileSelected !== 0 && buttonCool === 0) {
+      setButtonCool(1);
+      setTimeout(() => {
+        setButtonCool(0);
+      }, 1000);
       setProfileSelected(profileSelected - 1);
       translateX.value = withSpring(translateX.value + 190);
-      width.value = withSpring(width.value + 60);
-      height.value = withSpring(height.value - 60);
+      
+      if (profileSelected === 1) {
+        width.value = withSpring(width.value + 60);
+        height.value = withSpring(height.value - 60);
+      }
+      if (profileSelected === 2) {
+        height.value = withSpring(height.value + 60);
+        height2.value = withSpring(height.value - 10);
+      }
     }
   };
 
   const translateX = useSharedValue(0);
   const width = useSharedValue(150);
   const height = useSharedValue(90);
+  const height2 = useSharedValue(90);
 
   return (
     <SafeAreaView className="bg-white h-full items-center">
@@ -110,7 +123,7 @@ const Profile = () => {
               width,
               height: 150,
               position: 'absolute',
-              marginLeft: 40,
+              marginLeft: 38,
               transform: [{ translateX }],
             }}
             >
@@ -126,12 +139,28 @@ const Profile = () => {
               width: 150,
               height,
               position: 'absolute',
-              marginLeft: 232,
+              marginLeft: 228,
               transform: [{ translateX }],
             }}
             >
               <Image 
                 source={imagePaths[1]}
+                className="w-full h-full"
+                resizeMode="contain"
+              />
+            </Animated.View>
+
+            <Animated.View
+            style={{
+              width: 150,
+              height: height2,
+              position: 'absolute',
+              marginLeft: 418,
+              transform: [{ translateX }],
+            }}
+            >
+              <Image 
+                source={imagePaths[2]}
                 className="w-full h-full"
                 resizeMode="contain"
               />
@@ -153,11 +182,13 @@ const Profile = () => {
 
         </View>
 
-          <CustomButton
-          title="Desconectar"
-          handlePress={desconectar}
-          containerStyles="mt-60 ml-32 absolute h-[20px]"
-          />
+          <View className="w-full absolute mt-56 justify-center items-center">
+            <CustomButton
+              title="Selecionar"
+              handlePress={editPic}
+              containerStyles="w-[200px]"
+            />
+          </View>
         </View>
         
         : 
@@ -165,7 +196,7 @@ const Profile = () => {
         <View>
           <View className="w-[95vw] h-[300px] items-center justify-around rounded-3xl flex-row bg-fifth absolute">
             <Image 
-              source={imagePaths[0]}
+              source={imagePaths[profileSelected]}
               className="w-[150px] h-[150px]"
               resizeMode="contain"
             />
@@ -180,10 +211,14 @@ const Profile = () => {
               resizeMode="contain"
               />
             </TouchableOpacity>
+
+            <Text className="text-2xl absolute pb-5">
+            Alexander Vasquez
+          </Text>
           </View>
         </View>
         }
-
+        
         <CustomButton
           title="Desconectar"
           handlePress={desconectar}
