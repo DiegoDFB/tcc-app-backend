@@ -31,21 +31,15 @@ const Home = () => {
   return <RootSiblingParent>
       <SafeAreaView className="bg-white h-full">
         <ScrollView>
-          <Image 
-              source={images.bghome1}
-              className="w-[150vw] h-[80vh] -mt-14 -ml-10 absolute overflow-hidden"
-              resizeMode="cover"
-            />
-
             <Text
-            className="text-3xl font-bold text-white mt-10 pl-2 ml-10 text-left bg-third rounded-xl w-[80vw]"
+            className="text-3xl font-bold text-white mt-10 pl-2 ml-5 text-left bg-third rounded-xl w-[90vw]"
             >Bem-vindo, {nome}!
             </Text>
 
           <View className="w-full items-center min-h-[85vh] px-4">
 
-          <View className="w-[80vw] h-[30vh] mt-5 mb-10
-            justify-start flex-row bg-fifth rounded-2xl">
+          <View className="w-[90vw] h-[30vh] mt-5
+            justify-around flex-row bg-fifth rounded-2xl">
               {estadoConexao ? 
                 <View className="w-[39vw] justify-center">
                   <Image 
@@ -62,19 +56,19 @@ const Home = () => {
                   />
                 </View>}
               {estadoConexao ? 
-                <View className="w-[39vw] pl-1 bg-third rounded-xl h-[20vh] mt-10 justify-center">
+                <View className="w-[39vw] pl-1 rounded-xl h-[20vh] mt-10 justify-center">
                   <Text
-                  className="text-3xl font-bold text-white text-center"
+                  className="text-3xl font-bold text-center"
                   >Sucesso!
                   </Text>
                   <Text
-                  className="text-xl font-bold text-white text-left mt-5 mr-3 pl-1"
+                  className="text-xl font-bold text-left mt-5 mr-3 pl-1"
                   >Seu brinquedo está conectado!
                   </Text>
                 </View> :
-                    <View className="w-[39vw] pl-1 bg-third rounded-xl h-[22vh] mt-10">
+                    <View className="w-[39vw] pl-1 rounded-xl h-[22vh] mt-10 items-center">
                       <Text
-                      className="text-xl font-bold text-white text-left pl-1"
+                      className="text-xl font-bold text-left pl-1"
                       >Parece que você ainda não conectou seu brinquedo!
                       </Text>
                       <View>
@@ -89,10 +83,10 @@ const Home = () => {
                   }
             </View>
 
-            <View className="w-full h-[100px] mt-10
-            justify-around flex-row">
+            <View className="w-full h-[300px] mt-5
+            justify-around flex-row bg-fifth rounded-3xl">
               <View className="w-[100px] h-[140px]
-              items-center flex-column">
+              items-center flex-column mt-5">
                 <TouchableOpacity 
                   onPress={ () => router.push('/sign-in') }
                   className="w-[100px] h-[100px] rounded-xl
@@ -108,7 +102,7 @@ const Home = () => {
               </View>
 
               <View className="w-[100px] h-[140px]
-              items-center flex-column">
+              items-center flex-column mt-5">
                 <TouchableOpacity 
                   onPress={ () => router.push('/sign-in') }
                   className="w-[100px] h-[100px] rounded-xl
@@ -124,7 +118,7 @@ const Home = () => {
               </View>
 
               <View className="w-[100px] h-[140px]
-              items-center flex-column">
+              items-center flex-column mt-5">
                 <TouchableOpacity 
                   onPress={ () => router.push('/sign-in') }
                   className="w-[100px] h-[100px] rounded-xl
