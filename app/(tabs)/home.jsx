@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView, Text, View, Image, Dimensions } from 'react-native';
+import { ScrollView, Text, View, Image, Dimensions, TextInput } from 'react-native';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useFonts } from 'expo-font'
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,39 +12,22 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 import Toast from 'react-native-toast-message';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
-import AnimateableText from 'react-native-animateable-text';
 
-const BACKGROUND_COLOR = "#00FF00";
-const BACKGROUND_STROKE_COLOR = "#FF0000";
-const STROKE_COLOR = "#0000FF";
 
-const {
-  width, height
-} = Dimensions.get('window')
-
-const CIRCLE_LENGTH = 1000;
-const R = CIRCLE_LENGTH / (2*Math.PI);
+const radius = 45;
+const circunference = radius * Math.PI * 2;
+const duration = 6000;
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const AnimatedText = Animated.createAnimatedComponent(TextInput);
 
 
 const Home = () => {
 
-  const progress = useSharedValue(0);
-
   useEffect(() => {
     showToast();
-    progress.value = withTiming(1, {duration: 2000})
-  }, [])
-
-  const progressText = useDerivedValue(() => {
-    return `${Math.floor(progress.value * 100)}`
-  })
-
-  const animatedProps = useAnimatedProps(() => ({
-    strokeDashoffset: CIRCLE_LENGTH * (1 - progress.value),
-    text: progressText.value,
-  }))
+    strokeOffset.value = 0;
+  }, []);
 
 
   const { nome } = useLocalSearchParams();
@@ -57,6 +40,26 @@ const Home = () => {
       text2: 'Seja bem-vindo! 👋'
     });
   }
+
+  const strokeOffset = useSharedValue(circunference);
+
+  const percentage = useDerivedValue(() => {
+    const number = ((circunference - strokeOffset.value) / circunference ) * 100;
+    return withTiming(number, { duration: duration });
+  });
+
+  const animatedCircleProps = useAnimatedProps(() => {
+    return {
+      strokeDashoffset: withTiming(strokeOffset.value, { duration: duration }),
+      stroke: "#9E4784",
+    };
+  });
+
+  const animatedTextProps = useAnimatedProps(() => {
+    return {
+      text: `${Math.round(percentage.value)} %`
+    }
+  });
 
   return <RootSiblingParent>
       <SafeAreaView className="bg-white h-full">
@@ -166,14 +169,34 @@ const Home = () => {
             </View>
 
             <View className="w-full h-[500px] mt-5
-            justify-around flex-row bg-fifth rounded-3xl items-center">
-                  <AnimateableText className="font-lg text-white" animatedProps={progressText}/>
+            justify-around bg-fifth rounded-3xl items-center">
+                  <AnimatedText className="text-white font-3xl font-pbold absolute mt-10"
+                  animatedProps={animatedTextProps}>
+
+                  </AnimatedText>
                   
-                  <Svg className="absolute">
-                    <Circle cx={width / 2} cy={height / 2} r={R} stroke={BACKGROUND_STROKE_COLOR} strokeWidth={30} />
-                    <AnimatedCircle cx={width / 2} cy={height / 2} r={R} stroke={STROKE_COLOR} strokeWidth={15} 
-                    strokeDasharray={CIRCLE_LENGTH} strokeDashoffset={CIRCLE_LENGTH * 0.5}
-                    animatedProps={animatedProps} strokeLinecap={'round'}/>
+                  <Svg 
+                  height="50%"
+                  width="50%"
+                  viewBox="0 0 100 100"
+                  >
+                    <Circle 
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    stroke="#E7E7E7"
+                    fill="transparent"
+                    strokeWidth={10} />
+
+                    <AnimatedCircle
+                    animatedProps={animatedCircleProps}
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    fill="transparent"
+                    strokeWidth={10}
+                    strokeDasharray={`${radius * Math.PI * 2}`}
+                    strokeLinecap={'round'} />
                   </Svg>
               
             </View>
