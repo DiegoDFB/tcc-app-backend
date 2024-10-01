@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView, Text, View, Image } from 'react-native';
+import { ScrollView, Text, View, Image, Dimensions } from 'react-native';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { useFonts } from 'expo-font'
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,12 +10,42 @@ import { TouchableOpacity } from 'react-native';
 import { useEffect } from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import Toast from 'react-native-toast-message';
+import Svg, { Circle } from 'react-native-svg';
+import Animated, { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
+import AnimateableText from 'react-native-animateable-text';
+
+const BACKGROUND_COLOR = "#00FF00";
+const BACKGROUND_STROKE_COLOR = "#FF0000";
+const STROKE_COLOR = "#0000FF";
+
+const {
+  width, height
+} = Dimensions.get('window')
+
+const CIRCLE_LENGTH = 1000;
+const R = CIRCLE_LENGTH / (2*Math.PI);
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
 
 const Home = () => {
 
+  const progress = useSharedValue(0);
+
   useEffect(() => {
     showToast();
+    progress.value = withTiming(1, {duration: 2000})
+  }, [])
+
+  const progressText = useDerivedValue(() => {
+    return `${Math.floor(progress.value * 100)}`
   })
+
+  const animatedProps = useAnimatedProps(() => ({
+    strokeDashoffset: CIRCLE_LENGTH * (1 - progress.value),
+    text: progressText.value,
+  }))
+
 
   const { nome } = useLocalSearchParams();
   const estadoConexao = false;
@@ -132,6 +162,19 @@ const Home = () => {
                 </TouchableOpacity>
                 <Text className="text-xl font-bold">Ajuda</Text>
               </View>
+              
+            </View>
+
+            <View className="w-full h-[500px] mt-5
+            justify-around flex-row bg-fifth rounded-3xl items-center">
+                  <AnimateableText className="font-lg text-white" animatedProps={progressText}/>
+                  
+                  <Svg className="absolute">
+                    <Circle cx={width / 2} cy={height / 2} r={R} stroke={BACKGROUND_STROKE_COLOR} strokeWidth={30} />
+                    <AnimatedCircle cx={width / 2} cy={height / 2} r={R} stroke={STROKE_COLOR} strokeWidth={15} 
+                    strokeDasharray={CIRCLE_LENGTH} strokeDashoffset={CIRCLE_LENGTH * 0.5}
+                    animatedProps={animatedProps} strokeLinecap={'round'}/>
+                  </Svg>
               
             </View>
 
