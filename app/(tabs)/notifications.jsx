@@ -12,7 +12,7 @@ const Home = () => {
   return (
     <SafeAreaView className="bg-white h-full">
       <ScrollView>
-        <View className="w-full h-[100vh] bg-fifth">
+        <View className="w-full h-[100vh] bg-white">
           <View className="w-full h-[100px] items-center justify-center">
             <Text className="text-3xl font-pbold">
               Notificações
@@ -57,21 +57,38 @@ const Home = () => {
           </View>
 
           <View className="w-full items-center -mt-3">
-            <View className="bg-white h-[30px] rounded-3xl w-[30vw] mb-5 justify-center items-center">
+            <View className="bg-fifth h-[30px] rounded-3xl w-[30vw] mb-5 justify-center items-center"
+            style={{
+              elevation: 10,
+              shadowColor: '#52006A'
+            }}>
               <Text className="text-xl font-pbold">
                 Hoje
               </Text>
             </View>
 
-            <View className="bg-white h-[100px] rounded-3xl w-[95vw] mb-5">
+            <View className="bg-white h-[100px] rounded-3xl w-[95vw] mb-5"
+            style={{
+              elevation: 10,
+              shadowColor: '#52006A'
+            }}>
 
             </View>
 
-            <View className="bg-white h-[100px] rounded-3xl w-[95vw] mb-5">
+            <View className="bg-white h-[100px] rounded-3xl w-[95vw] mb-5"
+            style={{
+              elevation: 10,
+              shadowColor: '#52006A'
+            }}>
 
             </View>
 
-            <View className="bg-white h-[100px] rounded-3xl w-[95vw] mb-5">
+            <View className="bg-white h-[100px] rounded-3xl w-[95vw] mb-5"
+            style={{
+              elevation: 10,
+              shadowColor: '#52006A'
+            }}>
+              
 
             </View>
           </View>

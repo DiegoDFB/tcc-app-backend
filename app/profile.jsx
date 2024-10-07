@@ -1,24 +1,27 @@
 import { Button, Image, ScrollView, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import CustomButton from '../../components/CustomButton'
+import CustomButton from '../components/CustomButton'
 import axios from 'axios';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { icons, images } from '../../constants';
+import { icons, images } from '../constants';
 import { TouchableOpacity } from 'react-native';
 import Animated, { withSpring } from 'react-native-reanimated';
 import { useSharedValue } from 'react-native-reanimated';
 
 const Profile = () => {
 
+  const { nome } = useLocalSearchParams();
+  const { sobrenome } = useLocalSearchParams();
+
   const desconectar = async (values) => {
     router.push("/sign-in");
   };
 
   const imagePaths = [
-    require('../../assets/images/foxPerfilGlasses.png'),
-    require('../../assets/images/foxPerfilHeadphones.png'),
-    require('../../assets/images/foxFemale.png'),
+    require('../assets/images/foxPerfilGlasses.png'),
+    require('../assets/images/foxPerfilHeadphones.png'),
+    require('../assets/images/foxFemale.png'),
   ];
 
   const [profileSelected, setProfileSelected] = useState(0);
@@ -105,7 +108,8 @@ const Profile = () => {
 
         {selecting ?
         <View>
-          <View className="w-[95vw] h-[300px] items-center justify-around rounded-3xl flex-row bg-fifth">
+          <View className="w-[95vw] h-[300px] items-center justify-around
+          rounded-3xl flex-row bg-fifth">
           {firstSelect ?
             <TouchableOpacity className="w-[10vw] h-[5vh]"
             onPress={subPic}>
@@ -212,8 +216,8 @@ const Profile = () => {
               />
             </TouchableOpacity>
 
-            <Text className="text-2xl absolute pb-5">
-            Alexander Vasquez
+            <Text className="text-3xl absolute pb-5 font-pbold">
+            {nome} {sobrenome}
           </Text>
           </View>
         </View>

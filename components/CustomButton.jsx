@@ -4,6 +4,10 @@ import React from 'react'
 const CustomButton = ({ title, handlePress, containerStyles, textStyles, isLoading}) => {
   return (
     <TouchableOpacity 
+    style={{
+      elevation: 10,
+      shadowColor: '#52006A'
+    }}
     onPress={handlePress}
     activeOpacity={0.7}
     className={`bg-secondary rounded-xl min-h-[62px] justify-center items-center

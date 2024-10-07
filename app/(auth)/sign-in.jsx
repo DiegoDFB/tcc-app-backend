@@ -32,16 +32,13 @@ const SignIn = () => {
   const [showPassword, setshowPassword] = useState(false)
 
   const handleLogin = async (values) => {
-    router.push({
-      pathname:"/(tabs)/home",
-      params: { } });
-    /*try {
+    try {
       const response = await axios.post('http://192.168.0.146:3000/login', { ...values });
       if (response?.data?.success) {
         if (router && router.push) {
           router.push({
             pathname:"/(tabs)/home",
-            params: { nome: response?.data?.nome } });
+            params: { nome: response?.data?.nome, sobrenome: response?.data?.sobrenome } });
         } else {
           console.error("Router object is null");
         }
@@ -52,7 +49,6 @@ const SignIn = () => {
       console.error(error);
       Alert.alert("Erro", 'Email ou senha incorretos. Tente novamente.');
     }
-    */
   };
 
   return <RootSiblingParent>

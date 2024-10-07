@@ -27,7 +27,8 @@ app.post('/login', (req, res) => {
       const userData = results[0]; // assuming only one user with the given email and password
       res.json({
         success: true,
-        nome: userData.nome
+        nome: userData.nome,
+        sobrenome: userData.sobrenome
       });
     } else {
       res.status(401).json({ error: 'Email ou senha incorretos' });
