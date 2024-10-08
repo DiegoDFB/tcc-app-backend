@@ -32,6 +32,9 @@ const SignIn = () => {
   const [showPassword, setshowPassword] = useState(false)
 
   const handleLogin = async (values) => {
+    router.push({
+      pathname:"/(tabs)/home"});
+/*
     try {
       const response = await axios.post('http://192.168.0.146:3000/login', { ...values });
       if (response?.data?.success) {
@@ -45,12 +48,12 @@ const SignIn = () => {
       } else {
         alert(response?.data?.error || 'Email ou senha incorretos. Tente novamente.');
       }
-    } catch (error) {
+    }  catch (error) {
       console.error(error);
       Alert.alert("Erro", 'Email ou senha incorretos. Tente novamente.');
     }
+    */
   };
-
   return <RootSiblingParent>
       <SafeAreaView className="bg-white h-full">
         <ScrollView>

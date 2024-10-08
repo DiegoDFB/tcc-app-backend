@@ -24,6 +24,18 @@ const AnimatedText = Animated.createAnimatedComponent(TextInput);
 
 const Home = () => {
 
+  const height = useSharedValue(130);
+
+  const showExpandableAction = () => {
+    setShowExpandable(!showExpandable);
+    if (showExpandable) {
+      height.value = withTiming(300, {duration: 500});
+    }
+    else {
+      height.value = withTiming(130, {duration: 500});
+    }
+  }
+
   useEffect(() => {
     showToast();
     strokeOffset.value = 0;
@@ -37,6 +49,8 @@ const Home = () => {
   const { nome } = useLocalSearchParams();
   const { sobrenome } = useLocalSearchParams();
   const [estadoConexao, setEstadoConexao] = useState(false)
+  const [showExpandable, setShowExpandable] = useState(false)
+  
 
   const showToast = () => {
     Toast.show({
@@ -382,54 +396,59 @@ const Home = () => {
                     </Text>
                 
               </View>
+              <TouchableOpacity
+                  onPress={showExpandableAction}
+                  className="w-[94%] h-[130] bg-third">
+                <Animated.View className="w-[94%]
+                bg-white rounded-3xl -mt-60 flex-row ml-3"
+                style={{
+                  height: height,
+                  elevation: 10,
+                  shadowColor: '#52006A'
+                }}
+                >                 
+                      <Svg 
+                      height="110px"
+                      width="110px"
+                      viewBox="0 0 100 100"
+                      className="mt-3 ml-2"
+                      >
+                        <Circle 
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        stroke="#E7E7E7"
+                        fill="transparent"
+                        strokeWidth={10} />
+
+                        <AnimatedCircle
+                        animatedProps={animatedCirclePropsAdd}
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        fill="transparent"
+                        strokeWidth={10}
+                        strokeDasharray={`${radius * Math.PI * 2}`}
+                        strokeLinecap={'round'} />
+                      </Svg>
+
+                      <View className="w-[240] h-[100] justify-center mt-3 ml-3">
+                        <Text className="text-2xl font-pbold mb-3">
+                          Adição
+                        </Text>
+
+                        <AnimatedText className="text-xl font-pbold"
+                        editable={false}
+                        style={{ color: 'black' }}
+                        animatedProps={animatedTextPropsAdd}>
+                          de acertos
+                        </AnimatedText>
+                      </View>                  
+                </Animated.View>
+              </TouchableOpacity>
+
               <View className="w-[94%] h-[130px]
-               bg-white rounded-3xl items-center justify-around absolute mt-80 flex-row ml-3"
-               style={{
-                elevation: 10,
-                shadowColor: '#52006A'
-              }}
-              >                   
-                    <Svg 
-                    height="80%"
-                    width="80%"
-                    viewBox="0 0 100 100"
-                    className="-mt-42 -ml-12"
-                    >
-                      <Circle 
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      stroke="#E7E7E7"
-                      fill="transparent"
-                      strokeWidth={10} />
-
-                      <AnimatedCircle
-                      animatedProps={animatedCirclePropsAdd}
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      fill="transparent"
-                      strokeWidth={10}
-                      strokeDasharray={`${radius * Math.PI * 2}`}
-                      strokeLinecap={'round'} />
-                    </Svg>
-
-                    <View className="w-[240] h-[100] justify-center -mt-42">
-                      <Text className="text-2xl font-pbold mb-3">
-                        Adição
-                      </Text>
-
-                      <AnimatedText className="text-xl font-pbold"
-                      editable={false}
-                      style={{ color: 'black' }}
-                      animatedProps={animatedTextPropsAdd}>
-                        de acertos
-                      </AnimatedText>
-                    </View>                  
-                
-              </View>
-              <View className="w-[94%] h-[130px]
-               bg-white rounded-3xl items-center justify-around flex-row ml-3 -mt-24"
+               bg-white rounded-3xl items-center justify-around flex-row ml-3 mt-6"
                style={{
                 elevation: 10,
                 shadowColor: '#52006A'
