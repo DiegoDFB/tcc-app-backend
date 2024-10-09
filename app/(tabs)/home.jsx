@@ -12,6 +12,7 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 import Toast from 'react-native-toast-message';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
+import ExpandableActionComponent from '../../components/ExpandableActionComponent';
 
 
 const radius = 45;
@@ -24,32 +25,15 @@ const AnimatedText = Animated.createAnimatedComponent(TextInput);
 
 const Home = () => {
 
-  const height = useSharedValue(130);
-
-  const showExpandableAction = () => {
-    setShowExpandable(!showExpandable);
-    if (showExpandable) {
-      height.value = withTiming(300, {duration: 500});
-    }
-    else {
-      height.value = withTiming(130, {duration: 500});
-    }
-  }
-
   useEffect(() => {
     showToast();
     strokeOffset.value = 0;
-    strokeOffsetAdd.value = 0;
-    strokeOffsetSub.value = 50;
-    strokeOffsetMult.value = 100;
-    strokeOffsetDiv.value = 0;
   }, []);
 
 
   const { nome } = useLocalSearchParams();
   const { sobrenome } = useLocalSearchParams();
   const [estadoConexao, setEstadoConexao] = useState(false)
-  const [showExpandable, setShowExpandable] = useState(false)
   
 
   const showToast = () => {
@@ -65,33 +49,9 @@ const Home = () => {
   }
 
   const strokeOffset = useSharedValue(circunference);
-  const strokeOffsetAdd = useSharedValue(circunference);
-  const strokeOffsetSub = useSharedValue(circunference);
-  const strokeOffsetMult = useSharedValue(circunference);
-  const strokeOffsetDiv = useSharedValue(circunference);
 
   const percentage = useDerivedValue(() => {
     const number = ((circunference - strokeOffset.value) / circunference ) * 100;
-    return withTiming(number, { duration: duration });
-  });
-
-  const percentageAdd = useDerivedValue(() => {
-    const number = ((circunference - strokeOffsetAdd.value) / circunference ) * 100;
-    return withTiming(number, { duration: duration });
-  });
-
-  const percentageSub = useDerivedValue(() => {
-    const number = ((circunference - strokeOffsetSub.value) / circunference ) * 100;
-    return withTiming(number, { duration: duration });
-  });
-
-  const percentageMult = useDerivedValue(() => {
-    const number = ((circunference - strokeOffsetMult.value) / circunference ) * 100;
-    return withTiming(number, { duration: duration });
-  });
-
-  const percentageDiv = useDerivedValue(() => {
-    const number = ((circunference - strokeOffsetDiv.value) / circunference ) * 100;
     return withTiming(number, { duration: duration });
   });
 
@@ -101,60 +61,10 @@ const Home = () => {
       stroke: "#75BFEC",
     };
   });
-  const animatedCirclePropsAdd = useAnimatedProps(() => {
-    return {
-      strokeDashoffset: withTiming(strokeOffsetAdd.value, { duration: duration }),
-      stroke: "#75BFEC",
-    };
-  });
-  const animatedCirclePropsSub = useAnimatedProps(() => {
-    return {
-      strokeDashoffset: withTiming(strokeOffsetSub.value, { duration: duration }),
-      stroke: "#75BFEC",
-    };
-  });
-  const animatedCirclePropsMult = useAnimatedProps(() => {
-    return {
-      strokeDashoffset: withTiming(strokeOffsetMult.value, { duration: duration }),
-      stroke: "#75BFEC",
-    };
-  });
-  const animatedCirclePropsDiv = useAnimatedProps(() => {
-    return {
-      strokeDashoffset: withTiming(strokeOffsetDiv.value, { duration: duration }),
-      stroke: "#75BFEC",
-    };
-  });
 
   const animatedTextProps = useAnimatedProps(() => {
     return {
       text: `${Math.round(percentage.value)}% `
-    }
-  });
-  const animatedTextPropsAdd = useAnimatedProps(() => {
-    return {
-      text: `${Math.round(percentageAdd.value)}% `
-    }
-  });
-  const animatedTextPropsSub = useAnimatedProps(() => {
-    return {
-      text: `${Math.round(percentageSub.value)}% `
-    }
-  });
-  const animatedTextPropsMult = useAnimatedProps(() => {
-    return {
-      text: `${Math.round(percentageMult.value)}% `
-    }
-  });
-  const animatedTextPropsDiv = useAnimatedProps(() => {
-    return {
-      text: `${Math.round(percentageDiv.value)}% `
-    }
-  });
-
-  const animatedTextSubProps = useAnimatedProps(() => {
-    return {
-      text: `${Math.round(percentage.value)}% de acertos`
     }
   });
 
@@ -300,12 +210,9 @@ const Home = () => {
               
             </View>
 
-            <View className="w-full h-[950px] mt-5
+            <View className="w-full h-fit mt-5
             bg-white rounded-3xl items-start mb-20"
-            style={{
-              elevation: 20,
-              shadowColor: '#52006A'
-            }}>
+            >
               <View className="h-[70px]">
                 <ScrollView className="flex-row mt-5"
                 horizontal={true}
@@ -396,195 +303,43 @@ const Home = () => {
                     </Text>
                 
               </View>
-              <TouchableOpacity
-                  onPress={showExpandableAction}
-                  className="w-[94%] h-[130] bg-third">
-                <Animated.View className="w-[94%]
-                bg-white rounded-3xl -mt-60 flex-row ml-3"
-                style={{
-                  height: height,
-                  elevation: 10,
-                  shadowColor: '#52006A'
-                }}
-                >                 
-                      <Svg 
-                      height="110px"
-                      width="110px"
-                      viewBox="0 0 100 100"
-                      className="mt-3 ml-2"
-                      >
-                        <Circle 
-                        cx="50"
-                        cy="50"
-                        r="45"
-                        stroke="#E7E7E7"
-                        fill="transparent"
-                        strokeWidth={10} />
+              
+              <ExpandableActionComponent
+                title={"Adição"}
+                radius={radius}
+                animatedCirclePropsAdd={animatedCircleProps}
+                animatedTextPropsAdd={animatedTextProps}
+              >
+              </ExpandableActionComponent>
 
-                        <AnimatedCircle
-                        animatedProps={animatedCirclePropsAdd}
-                        cx="50"
-                        cy="50"
-                        r="45"
-                        fill="transparent"
-                        strokeWidth={10}
-                        strokeDasharray={`${radius * Math.PI * 2}`}
-                        strokeLinecap={'round'} />
-                      </Svg>
+              <ExpandableActionComponent
+                title={"Subtração"}
+                radius={radius}
+                animatedCirclePropsAdd={animatedCircleProps}
+                animatedTextPropsAdd={animatedTextProps}
+                extraStyles={"mt-5"}
+              >
+              </ExpandableActionComponent>
+              
+              <ExpandableActionComponent
+                title={"Multiplicação"}
+                radius={radius}
+                animatedCirclePropsAdd={animatedCircleProps}
+                animatedTextPropsAdd={animatedTextProps}
+                extraStyles={"mt-5"}
+              >
+              </ExpandableActionComponent>
 
-                      <View className="w-[240] h-[100] justify-center mt-3 ml-3">
-                        <Text className="text-2xl font-pbold mb-3">
-                          Adição
-                        </Text>
+              <ExpandableActionComponent
+                title={"Divisão"}
+                radius={radius}
+                animatedCirclePropsAdd={animatedCircleProps}
+                animatedTextPropsAdd={animatedTextProps}
+                extraStyles={"mt-5"}
+              >
+              </ExpandableActionComponent>
 
-                        <AnimatedText className="text-xl font-pbold"
-                        editable={false}
-                        style={{ color: 'black' }}
-                        animatedProps={animatedTextPropsAdd}>
-                          de acertos
-                        </AnimatedText>
-                      </View>                  
-                </Animated.View>
-              </TouchableOpacity>
-
-              <View className="w-[94%] h-[130px]
-               bg-white rounded-3xl items-center justify-around flex-row ml-3 mt-6"
-               style={{
-                elevation: 10,
-                shadowColor: '#52006A'
-              }}
-              >                   
-                    <Svg 
-                    height="80%"
-                    width="80%"
-                    viewBox="0 0 100 100"
-                    className="-mt-42 -ml-12"
-                    >
-                      <Circle 
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      stroke="#E7E7E7"
-                      fill="transparent"
-                      strokeWidth={10} />
-
-                      <AnimatedCircle
-                      animatedProps={animatedCirclePropsSub}
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      fill="transparent"
-                      strokeWidth={10}
-                      strokeDasharray={`${radius * Math.PI * 2}`}
-                      strokeLinecap={'round'} />
-                    </Svg>
-
-                    <View className="w-[240] h-[100] justify-center -mt-42">
-                      <Text className="text-2xl font-pbold mb-3">
-                        Subtração
-                      </Text>
-
-                      <AnimatedText className="text-xl font-pbold"
-                      editable={false}
-                      style={{ color: 'black' }}
-                      animatedProps={animatedTextPropsSub}>
-                        de acertos
-                      </AnimatedText>
-                    </View>                  
-                
-              </View>
-              <View className="w-[94%] h-[130px]
-               bg-white rounded-3xl items-center justify-around flex-row ml-3 mt-6"
-               style={{
-                elevation: 10,
-                shadowColor: '#52006A'
-              }}
-              >                   
-                    <Svg 
-                    height="80%"
-                    width="80%"
-                    viewBox="0 0 100 100"
-                    className="-mt-42 -ml-12"
-                    >
-                      <Circle 
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      stroke="#E7E7E7"
-                      fill="transparent"
-                      strokeWidth={10} />
-
-                      <AnimatedCircle
-                      animatedProps={animatedCirclePropsMult}
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      fill="transparent"
-                      strokeWidth={10}
-                      strokeDasharray={`${radius * Math.PI * 2}`}
-                      strokeLinecap={'round'} />
-                    </Svg>
-
-                    <View className="w-[240] h-[100] justify-center -mt-42">
-                      <Text className="text-2xl font-pbold mb-3">
-                        Multiplicação
-                      </Text>
-
-                      <AnimatedText className="text-xl font-pbold"
-                      editable={false}
-                      style={{ color: 'black' }}
-                      animatedProps={animatedTextPropsMult}>
-                        de acertos
-                      </AnimatedText>
-                    </View>                  
-                
-              </View>
-              <View className="w-[94%] h-[130px]
-               bg-white rounded-3xl items-center justify-around flex-row ml-3 mt-6"
-               style={{
-                elevation: 10,
-                shadowColor: '#52006A'
-              }}
-              >                   
-                    <Svg 
-                    height="80%"
-                    width="80%"
-                    viewBox="0 0 100 100"
-                    className="-mt-42 -ml-12"
-                    >
-                      <Circle 
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      stroke="#E7E7E7"
-                      fill="transparent"
-                      strokeWidth={10} />
-
-                      <AnimatedCircle
-                      animatedProps={animatedCirclePropsDiv}
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      fill="transparent"
-                      strokeWidth={10}
-                      strokeDasharray={`${radius * Math.PI * 2}`}
-                      strokeLinecap={'round'} />
-                    </Svg>
-
-                    <View className="w-[240] h-[100] justify-center -mt-42">
-                      <Text className="text-2xl font-pbold mb-3">
-                        Divisão
-                      </Text>
-
-                      <AnimatedText className="text-xl font-pbold"
-                      editable={false}
-                      style={{ color: 'black' }}
-                      animatedProps={animatedTextPropsDiv}>
-                        de acertos
-                      </AnimatedText>
-                    </View>                  
-                
-              </View>
+              
             </View>
 
           </View>
