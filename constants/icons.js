@@ -16,6 +16,8 @@ import config from "../assets/icons/config.png";
 import pencil from "../assets/icons/pencil.png";
 import interrogation from "../assets/icons/interrogation.png";
 import notebook from "../assets/icons/notebook.png";
+import check from "../assets/icons/check.png";
+import x from "../assets/icons/x.png";
 
 export default {
   play,
@@ -36,4 +38,6 @@ export default {
   pencil,
   interrogation,
   notebook,
+  check,
+  x
 };

@@ -10,7 +10,7 @@ import { TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import Toast from 'react-native-toast-message';
-import Svg, { Circle } from 'react-native-svg';
+import Svg, { Circle, err } from 'react-native-svg';
 import Animated, { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import ExpandableActionComponent from '../../components/ExpandableActionComponent';
 
@@ -22,8 +22,14 @@ const duration = 2000;
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedText = Animated.createAnimatedComponent(TextInput);
 
-
 const Home = () => {
+
+  let categorias = [
+    { nome: "Adição", acertos: 5, erros: 2 },
+    { nome: "Subtração", acertos: 8, erros: 1 },
+    { nome: "Multiplicação", acertos: 3, erros: 4 },
+    { nome: "Divisão", acertos: 6, erros: 0 }
+  ];
 
   useEffect(() => {
     showToast();
@@ -43,6 +49,24 @@ const Home = () => {
       text2: 'Seja bem-vindo! 👋'
     });
   }
+
+  const porcentagemTotal = () => {
+
+    let acertosTotal = 0;
+    let errosTotal = 0;
+    let questTotal = [];
+
+    for (let item of categorias) {
+        acertosTotal += item.acertos;
+        errosTotal += item.erros;
+    }
+
+    questTotal = [acertosTotal + errosTotal, acertosTotal, errosTotal];
+
+    return questTotal;
+  }
+
+  let questTotal = porcentagemTotal();
 
   const updateProgress = (newProgress) => {
     strokeOffset.value = withTiming(circunference * (1 - newProgress / 100), { duration: 2000 });
@@ -260,16 +284,16 @@ const Home = () => {
                 </ScrollView>
               </View>
               <View className="w-full h-[480px] mt-5
-              justify-around bg-white rounded-3xl items-center"
+              bg-white rounded-3xl items-center -mb-32"
               >
-                    <AnimatedText className="text-3xl font-pbold absolute -mt-56"
+                    <AnimatedText className="text-3xl font-pbold absolute mt-10"
                     editable={false}
                     style={{ color: 'black' }}
                     animatedProps={animatedTextProps}>
 
                     </AnimatedText>
 
-                    <Text className="absolute mt-5 text-xl font-pbold -mt-48">
+                    <Text className="absolute mt-20 text-xl font-pbold">
                       de acertos
                     </Text>
                     
@@ -277,7 +301,7 @@ const Home = () => {
                     height="50%"
                     width="50%"
                     viewBox="0 0 100 100"
-                    className="-mt-80"
+                    className="-mt-10"
                     >
                       <Circle 
                       cx="50"
@@ -298,48 +322,50 @@ const Home = () => {
                       strokeLinecap={'round'} />
                     </Svg>
 
-                    <Text  className="text-black text-2xl font-bold -mt-24 absolute">
-                      de 10 questões respondidas
+                    <Text 
+                    className="text-black text-2xl font-bold mt-48 absolute">
+                      de {questTotal[0]} questões respondidas
                     </Text>
+
+                    <View className="flex-row items-center mt-10">
+                      <Image
+                      source={icons.check}
+                      className="w-[50px] h-[50px]"
+                      resizeMode="contain"
+                      />
+
+                      <Text
+                      className="text-xl font-pbold ml-5">
+                      {questTotal[1]} acertos
+                      </Text>
+                    </View>
+
+                    <View className="flex-row items-center mt-5 -ml-9">
+                      <Image
+                      source={icons.x}
+                      className="w-[50px] h-[50px]"
+                      resizeMode="contain"
+                      />
+
+                      <Text
+                      className="text-xl font-pbold ml-5">
+                      {questTotal[2]} erros
+                      </Text>
+                    </View>
                 
               </View>
-              
-              <ExpandableActionComponent
-                title={"Adição"}
-                radius={radius}
-                animatedCirclePropsAdd={animatedCircleProps}
-                animatedTextPropsAdd={animatedTextProps}
-              >
-              </ExpandableActionComponent>
 
-              <ExpandableActionComponent
-                title={"Subtração"}
-                radius={radius}
-                animatedCirclePropsAdd={animatedCircleProps}
-                animatedTextPropsAdd={animatedTextProps}
-                extraStyles={"mt-5"}
-              >
-              </ExpandableActionComponent>
-              
-              <ExpandableActionComponent
-                title={"Multiplicação"}
-                radius={radius}
-                animatedCirclePropsAdd={animatedCircleProps}
-                animatedTextPropsAdd={animatedTextProps}
-                extraStyles={"mt-5"}
-              >
-              </ExpandableActionComponent>
+              {categorias.map((item) => (
+                <ExpandableActionComponent
+                  title={item.nome}
+                  animatedCirclePropsAdd={animatedCircleProps}
+                  animatedTextPropsAdd={animatedTextProps}
+                  acertos={item.acertos}
+                  erros={item.erros}
+                  extraStyles={"mt-5"}
+                />
+              ))}
 
-              <ExpandableActionComponent
-                title={"Divisão"}
-                radius={radius}
-                animatedCirclePropsAdd={animatedCircleProps}
-                animatedTextPropsAdd={animatedTextProps}
-                extraStyles={"mt-5"}
-              >
-              </ExpandableActionComponent>
-
-              
             </View>
 
           </View>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, View, Text, TextInput, TouchableNativeFeedback } from 'react-native';
 import Animated, { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
+import { icons } from '../constants';
+import { Image } from 'react-native';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedText = Animated.createAnimatedComponent(TextInput);
@@ -10,11 +12,11 @@ const radius = 45;
 const circunference = radius * Math.PI * 2;
 const duration = 2000;
 
-const ExpandableActionComponent = ({ title, extraStyles }) => {
+const ExpandableActionComponent = ({ title, extraStyles, acertos, erros }) => {
 
   useEffect(() => {
-    strokeOffset.value = 0;
-  }, []);
+    strokeOffset.value = circunference * (1 - ((acertos / (acertos + erros)) * 100) / 100);
+  }, [acertos, erros]);
 
   const height = useSharedValue(130);
   const opacity = useSharedValue(0);
@@ -33,7 +35,7 @@ const ExpandableActionComponent = ({ title, extraStyles }) => {
     }
   }
 
-  const updateProgress = (newProgress) => {
+  const updateProgress = () => {
     strokeOffset.value = withTiming(circunference * (1 - newProgress / 100), { duration: 2000 });
   }
 
@@ -95,19 +97,41 @@ const ExpandableActionComponent = ({ title, extraStyles }) => {
           de acertos
           </AnimatedText>
         </View>
-
-        
-          <AnimatedText 
-          editable={false}
-          className="text-xl text-black absolute font-psemibold mt-32"
+        <View className="w-full h-full absolute mt-36 items-center">
+          <Animated.View className="w-[92%] h-[50%] justify-around"
           style={{
             opacity: opacity
-          }}
-          >
-          Testando Expansivel!!!
-          </AnimatedText>
-        
-      </Animated.View>
+          }}>
+            <View className="flex-row items-center">
+              <Image
+              source={icons.check}
+              className="w-[50px] h-[50px]"
+              resizeMode="contain"
+              />
+
+              <Text
+              className="text-xl font-pbold ml-5">
+              {acertos} acertos
+              </Text>
+            </View>
+
+            <View className="flex-row items-center">
+              <Image
+              source={icons.x}
+              className="w-[50px] h-[50px]"
+              resizeMode="contain"
+              />
+
+              <Text
+              className="text-xl font-pbold ml-5">
+              {erros} erros
+              </Text>
+            </View>
+
+          </Animated.View>
+          
+        </View>
+        </Animated.View>
     </TouchableNativeFeedback>
   );
 };
