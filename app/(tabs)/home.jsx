@@ -7,7 +7,7 @@ import { icons, images } from '../../constants'
 import CustomButton from '../../components/CustomButton';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import Toast from 'react-native-toast-message';
 import Svg, { Circle, err } from 'react-native-svg';
@@ -17,7 +17,7 @@ import ExpandableActionComponent from '../../components/ExpandableActionComponen
 
 const radius = 45;
 const circunference = radius * Math.PI * 2;
-const duration = 2000;
+const duration = 1000;
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedText = Animated.createAnimatedComponent(TextInput);
@@ -25,16 +25,140 @@ const AnimatedText = Animated.createAnimatedComponent(TextInput);
 const Home = () => {
 
   let categorias = [
-    { nome: "Adição", acertos: 5, erros: 2 },
-    { nome: "Subtração", acertos: 8, erros: 1 },
-    { nome: "Multiplicação", acertos: 3, erros: 4 },
-    { nome: "Divisão", acertos: 6, erros: 0 }
+    { nome: "Adição", acertos: 20, erros: 5, date: '2024-10-13' },
+    { nome: "Subtração", acertos: 5, erros: 5, date: '2024-10-13' },
+    { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-10-13' },
+    { nome: "Divisão", acertos: 5, erros: 5, date: '2024-10-13' },
+    { nome: "Adição", acertos: 5, erros: 5, date: '2024-10-09' },
+    { nome: "Subtração", acertos: 5, erros: 5, date: '2024-10-09' },
+    { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-10-09' },
+    { nome: "Divisão", acertos: 5, erros: 5, date: '2024-10-09' },
+    { nome: "Adição", acertos: 5, erros: 5, date: '2024-10-01' },
+    { nome: "Subtração", acertos: 5, erros: 5, date: '2024-10-01' },
+    { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-10-01' },
+    { nome: "Divisão", acertos: 5, erros: 5, date: '2024-10-01' },
+    { nome: "Adição", acertos: 5, erros: 5, date: '2024-08-01' },
+    { nome: "Subtração", acertos: 5, erros: 5, date: '2024-08-01' },
+    { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-08-01' },
+    { nome: "Divisão", acertos: 5, erros: 5, date: '2024-08-01' },
   ];
 
+  const answersByDate = categorias.reduce((acc, item) => {
+    if (!acc[item.date]) {
+      acc[item.date] = [];
+    }
+    acc[item.date].push(item);
+    return acc;
+  }, {});
+
+  const [selectedDateRange, setSelectedDateRange] = useState('allTime');
+  const [filteredAnswers, setFilteredAnswers] = useState({});
+  const [questTotal, setQuestTotal] = useState([0, 0, 0]);
+
   useEffect(() => {
-    showToast();
-    strokeOffset.value = 0;
-  }, []);
+    if (Object.keys(answersByDate).length === 0) {
+      return;
+    }
+
+    const calculateFilteredAnswers = () => {
+      const filteredAnswers = {};
+      Object.keys(answersByDate).forEach((date) => {
+        answersByDate[date].forEach((item) => {
+          if (!filteredAnswers[item.nome]) {
+            filteredAnswers[item.nome] = [];
+          }
+          filteredAnswers[item.nome].push(item);
+        });
+      });
+
+      const startDate = getStartDate();
+      const endDate = getEndDate();
+
+      const filteredAnswersByDate = {};
+      Object.keys(filteredAnswers).forEach((nome) => {
+        filteredAnswersByDate[nome] = filteredAnswers[nome].filter((item) => {
+          if (!startDate || !endDate) {
+            return true;
+          }
+          return item.date >= startDate && item.date <= endDate;
+        });
+      });
+
+      return filteredAnswersByDate;
+    };
+
+    const filteredAnswersByDate = calculateFilteredAnswers();
+    const total = porcentagemTotal(filteredAnswersByDate);
+
+    if (JSON.stringify(filteredAnswers) !== JSON.stringify(filteredAnswersByDate) || JSON.stringify(questTotal) !== JSON.stringify(total)) {
+      setFilteredAnswers(filteredAnswersByDate);
+      setQuestTotal(total);
+      if (total[1] + total[2] !== 0) {
+        strokeOffset.value = circunference * (1 - ((total[1] / (total[1] + total[2])) * 100) / 100);
+      }
+    }
+  }, [answersByDate, selectedDateRange, circunference, porcentagemTotal, getStartDate, getEndDate, filteredAnswers, questTotal]);
+
+const getStartDate = useCallback(() => {
+  if (selectedDateRange === 'today') {
+    return new Date().toISOString().split('T')[0];
+  } else if (selectedDateRange === 'thisWeek') {
+    const today = new Date();
+    const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+    return sevenDaysAgo.toISOString().split('T')[0];
+  } else if (selectedDateRange === 'thisMonth') {
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    return firstDayOfMonth.toISOString().split('T')[0];
+  } else {
+    return null;
+  }
+}, [selectedDateRange]);
+
+const getEndDate = useCallback(() => {
+  if (selectedDateRange === 'today') {
+    return new Date().toISOString().split('T')[0];
+  } else if (selectedDateRange === 'thisWeek') {
+    return new Date().toISOString().split('T')[0];
+  } else if (selectedDateRange === 'thisMonth') {
+    return new Date().toISOString().split('T')[0];
+  } else {
+    return null;
+  }
+}, [selectedDateRange]);
+
+const porcentagemTotal = useCallback((answers) => {
+  if (Object.keys(answers).length === 0) {
+    return [0, 0, 0];
+  }
+
+  let acertosTotal = 0;
+  let errosTotal = 0;
+  let questTotal = [];
+
+  Object.keys(answers).forEach((date) => {
+    answers[date].forEach((item) => {
+      acertosTotal += item.acertos;
+      errosTotal += item.erros;
+    });
+  });
+
+  questTotal = [acertosTotal + errosTotal, acertosTotal, errosTotal];
+  return questTotal;
+}, []);
+
+  const filterAnswersByDate = (startDate, endDate) => {
+    const filteredAnswers = {};
+    Object.keys(answersByDate).forEach((date) => {
+      if (!startDate && !endDate) {
+        filteredAnswers[date] = answersByDate[date];
+      } else if (date >= startDate && date <= endDate) {
+        filteredAnswers[date] = answersByDate[date];
+      }
+    });
+    return filteredAnswers;
+  };
+
 
 
   const { nome } = useLocalSearchParams();
@@ -50,23 +174,8 @@ const Home = () => {
     });
   }
 
-  const porcentagemTotal = () => {
 
-    let acertosTotal = 0;
-    let errosTotal = 0;
-    let questTotal = [];
-
-    for (let item of categorias) {
-        acertosTotal += item.acertos;
-        errosTotal += item.erros;
-    }
-
-    questTotal = [acertosTotal + errosTotal, acertosTotal, errosTotal];
-
-    return questTotal;
-  }
-
-  let questTotal = porcentagemTotal();
+  
 
   const updateProgress = (newProgress) => {
     strokeOffset.value = withTiming(circunference * (1 - newProgress / 100), { duration: 2000 });
@@ -241,46 +350,46 @@ const Home = () => {
                 <ScrollView className="flex-row mt-5"
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}>
-                  <View className="bg-fifth h-[30px] rounded-3xl w-[100px] mb-5 justify-center items-center
-                  mr-3 ml-5"
-                  style={{
-                    elevation: 10,
-                    shadowColor: '#52006A'
-                  }}>
-                    <Text className="text-xl font-pbold">
-                      Hoje
-                    </Text>
-                  </View>
-                  <View className="bg-fifth h-[30px] rounded-3xl w-[100px] mb-5 justify-center items-center
-                  mr-3"
-                  style={{
-                    elevation: 10,
-                    shadowColor: '#52006A'
-                  }}>
-                    <Text className="text-xl font-pbold">
-                      Semana
-                    </Text>
-                  </View>
-                  <View className="bg-fifth h-[30px] rounded-3xl w-[100px] mb-5 justify-center items-center
-                  mr-3"
-                  style={{
-                    elevation: 10,
-                    shadowColor: '#52006A'
-                  }}>
-                    <Text className="text-xl font-pbold">
-                      Mês
-                    </Text>
-                  </View>
-                  <View className="bg-fifth h-[30px] rounded-3xl w-[100px] mb-5 justify-center items-center
-                  mr-5"
-                  style={{
-                    elevation: 10,
-                    shadowColor: '#52006A'
-                  }}>
-                    <Text className="text-xl font-pbold">
-                      Tudo
-                    </Text>
-                  </View>
+                  <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
+                  w-[100px] mb-5 justify-center items-center mr-3"
+                    onPress={() => setSelectedDateRange('today')}
+                    style={{
+                      backgroundColor: selectedDateRange === 'today' ? '#F07900' : '#FAC68E',
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text>Hoje</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
+                  w-[100px] mb-5 justify-center items-center mr-3"
+                    onPress={() => setSelectedDateRange('thisWeek')}
+                    style={{
+                      backgroundColor: selectedDateRange === 'thisWeek' ? '#F07900' : '#FAC68E',
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text>Semana</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
+                  w-[100px] mb-5 justify-center items-center mr-3"
+                    onPress={() => setSelectedDateRange('thisMonth')}
+                    style={{
+                      backgroundColor: selectedDateRange === 'thisMonth' ? '#F07900' : '#FAC68E',
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text>Mês</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
+                  w-[100px] mb-5 justify-center items-center mr-3"
+                    onPress={() => setSelectedDateRange('allTime')}
+                    style={{
+                      backgroundColor: selectedDateRange === 'allTime' ? '#F07900' : '#FAC68E',
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text>Todos</Text>
+                  </TouchableOpacity>
                 </ScrollView>
               </View>
               <View className="w-full h-[480px] mt-5
@@ -340,7 +449,7 @@ const Home = () => {
                       </Text>
                     </View>
 
-                    <View className="flex-row items-center mt-5 -ml-9">
+                    <View className="flex-row items-center mt-5 -ml-6">
                       <Image
                       source={icons.x}
                       className="w-[50px] h-[50px]"
@@ -355,13 +464,19 @@ const Home = () => {
                 
               </View>
 
-              {categorias.map((item) => (
+              {Object.keys(categorias.reduce((acc, item) => {
+                if (!acc[item.nome]) {
+                  acc[item.nome] = item;
+                }
+                return acc;
+              }, {})).map((nome) => (
                 <ExpandableActionComponent
-                  title={item.nome}
+                  key={nome}
+                  title={nome}
                   animatedCirclePropsAdd={animatedCircleProps}
                   animatedTextPropsAdd={animatedTextProps}
-                  acertos={item.acertos}
-                  erros={item.erros}
+                  acertos={filteredAnswers[nome] ? filteredAnswers[nome].reduce((acc, item) => acc + item.acertos, 0) : 0}
+                  erros={filteredAnswers[nome] ? filteredAnswers[nome].reduce((acc, item) => acc + item.erros, 0) : 0}
                   extraStyles={"mt-5"}
                 />
               ))}
