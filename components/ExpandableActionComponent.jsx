@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, View, Text, TextInput, TouchableNativeFeedback } from 'react-native';
 import Animated, { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
-import Svg, { Circle } from 'react-native-svg';
+import Svg, { Circle, err } from 'react-native-svg';
 import { icons } from '../constants';
 import { Image } from 'react-native';
 
@@ -15,7 +15,12 @@ const duration = 1000;
 const ExpandableActionComponent = ({ title, extraStyles, acertos, erros }) => {
 
   useEffect(() => {
-    strokeOffset.value = circunference * (1 - ((acertos / (acertos + erros)) * 100) / 100);
+    if (acertos + erros !== 0){
+      strokeOffset.value = circunference * (1 - ((acertos / (acertos + erros)) * 100) / 100);
+    }
+    else {
+      strokeOffset.value = circunference * (1 - 0 / 100);
+    }
   }, [acertos, erros]);
 
   const height = useSharedValue(130);
