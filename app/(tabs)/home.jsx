@@ -7,7 +7,7 @@ import { icons, images } from '../../constants'
 import CustomButton from '../../components/CustomButton';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import Toast from 'react-native-toast-message';
 import Svg, { Circle, err } from 'react-native-svg';
@@ -25,7 +25,7 @@ const AnimatedText = Animated.createAnimatedComponent(TextInput);
 const Home = () => {
 
   let categorias = [
-    { nome: "Adição", acertos: 20, erros: 5, date: '2024-10-13' },
+    { nome: "Adição", acertos: 0, erros: 0, date: '2024-10-17' },
     { nome: "Subtração", acertos: 5, erros: 5, date: '2024-10-13' },
     { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-10-13' },
     { nome: "Divisão", acertos: 5, erros: 5, date: '2024-10-13' },
@@ -51,11 +51,12 @@ const Home = () => {
     return acc;
   }, {});
 
-  const [selectedDateRange, setSelectedDateRange] = useState('allTime');
+  const [selectedDateRange, setSelectedDateRange] = useState('today');
   const [filteredAnswers, setFilteredAnswers] = useState({});
   const [questTotal, setQuestTotal] = useState([0, 0, 0]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+
     if (Object.keys(answersByDate).length === 0) {
       return;
     }
@@ -96,8 +97,12 @@ const Home = () => {
       if (total[1] + total[2] !== 0) {
         strokeOffset.value = circunference * (1 - ((total[1] / (total[1] + total[2])) * 100) / 100);
       }
+      else {
+        strokeOffset.value = circunference * (1 - 0 / 100);
+      }
     }
-  }, [answersByDate, selectedDateRange, circunference, porcentagemTotal, getStartDate, getEndDate, filteredAnswers, questTotal]);
+
+  }, [answersByDate, selectedDateRange, circunference, porcentagemTotal, getStartDate, getEndDate, filteredAnswers, questTotal, percentage, strokeOffset]);
 
 const getStartDate = useCallback(() => {
   if (selectedDateRange === 'today') {
@@ -164,22 +169,6 @@ const porcentagemTotal = useCallback((answers) => {
   const { nome } = useLocalSearchParams();
   const { sobrenome } = useLocalSearchParams();
   const [estadoConexao, setEstadoConexao] = useState(false)
-  
-
-  const showToast = () => {
-    Toast.show({
-      type: 'success',
-      text1: 'Login feito com sucesso',
-      text2: 'Seja bem-vindo! 👋'
-    });
-  }
-
-
-  
-
-  const updateProgress = (newProgress) => {
-    strokeOffset.value = withTiming(circunference * (1 - newProgress / 100), { duration: 2000 });
-  }
 
   const strokeOffset = useSharedValue(circunference);
 
@@ -196,16 +185,17 @@ const porcentagemTotal = useCallback((answers) => {
   });
 
   const animatedTextProps = useAnimatedProps(() => {
+    const roundedPercentage = Math.round(percentage.value);
     return {
-      text: `${Math.round(percentage.value)}% `
-    }
+        text: `${roundedPercentage === 0 ? '0%' : roundedPercentage + '%'}`,
+    };
   });
 
   return <RootSiblingParent>
       <SafeAreaView className="bg-white h-full">
         <ScrollView>
             <Text
-            className="text-3xl font-bold text-white mt-10 pl-2 ml-5
+            className="text-3xl font-bold text-white mt-2 pl-2 ml-5
             text-left bg-third rounded-xl w-[90vw]"
             style={{
               elevation: 20,
@@ -216,7 +206,7 @@ const porcentagemTotal = useCallback((answers) => {
 
           <View className="w-full items-center min-h-[85vh] px-4">
 
-          <View className="w-[90vw] h-[250] mt-5
+          <View className="w-[90vw] h-[210] mt-3
             justify-around flex-row bg-fifth rounded-2xl"
             style={{
               elevation: 20,
@@ -260,7 +250,7 @@ const porcentagemTotal = useCallback((answers) => {
                         <CustomButton 
                           title="Conectar"
                           handlePress={() => setEstadoConexao(!estadoConexao)}
-                          containerStyles="w-[35vw] mt-7 border-2 border-third rounded-3xl bg-white"
+                          containerStyles="w-[35vw] mt-2 border-2 border-third rounded-3xl bg-white"
                           textStyles="text-third"
                         />
                       </View>
@@ -268,14 +258,14 @@ const porcentagemTotal = useCallback((answers) => {
                   }
             </View>
 
-            <View className="w-full h-[170px] mt-5
+            <View className="w-full h-[150px] mt-3
             justify-around flex-row bg-white rounded-3xl"
             style={{
               elevation: 20,
               shadowColor: '#52006A'
             }}>
               <View className="w-[100px] h-[140px]
-              items-center flex-column mt-5"
+              items-center flex-column mt-3"
               >
                 <TouchableOpacity 
                   onPress={ () =>
@@ -302,7 +292,7 @@ const porcentagemTotal = useCallback((answers) => {
               </View>
 
               <View className="w-[100px] h-[140px]
-              items-center flex-column mt-5">
+              items-center flex-column mt-3">
                 <TouchableOpacity 
                   onPress={ () => router.push('/sign-in') }
                   className="w-[100px] h-[100px] rounded-xl
@@ -322,7 +312,7 @@ const porcentagemTotal = useCallback((answers) => {
               </View>
 
               <View className="w-[100px] h-[140px]
-              items-center flex-column mt-5">
+              items-center flex-column mt-3">
                 <TouchableOpacity 
                   onPress={ () => router.push('/sign-in') }
                   className="w-[100px] h-[100px] rounded-xl
@@ -343,15 +333,15 @@ const porcentagemTotal = useCallback((answers) => {
               
             </View>
 
-            <View className="w-full h-fit mt-5
-            bg-white rounded-3xl items-start mb-20"
+            <View className="w-full h-fit mt-3
+            bg-white rounded-3xl items-center mb-20"
             >
-              <View className="h-[70px]">
+              <View className="h-[70px] w-[95%]">
                 <ScrollView className="flex-row mt-5"
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}>
                   <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
-                  w-[100px] mb-5 justify-center items-center mr-3"
+                  w-[90px] mb-5 justify-center items-center mr-3"
                     onPress={() => setSelectedDateRange('today')}
                     style={{
                       backgroundColor: selectedDateRange === 'today' ? '#F07900' : '#FAC68E',
@@ -361,7 +351,7 @@ const porcentagemTotal = useCallback((answers) => {
                     <Text>Hoje</Text>
                   </TouchableOpacity>
                   <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
-                  w-[100px] mb-5 justify-center items-center mr-3"
+                  w-[90px] mb-5 justify-center items-center mr-3"
                     onPress={() => setSelectedDateRange('thisWeek')}
                     style={{
                       backgroundColor: selectedDateRange === 'thisWeek' ? '#F07900' : '#FAC68E',
@@ -371,7 +361,7 @@ const porcentagemTotal = useCallback((answers) => {
                     <Text>Semana</Text>
                   </TouchableOpacity>
                   <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
-                  w-[100px] mb-5 justify-center items-center mr-3"
+                  w-[90px] mb-5 justify-center items-center mr-3"
                     onPress={() => setSelectedDateRange('thisMonth')}
                     style={{
                       backgroundColor: selectedDateRange === 'thisMonth' ? '#F07900' : '#FAC68E',
@@ -381,7 +371,7 @@ const porcentagemTotal = useCallback((answers) => {
                     <Text>Mês</Text>
                   </TouchableOpacity>
                   <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
-                  w-[100px] mb-5 justify-center items-center mr-3"
+                  w-[90px] mb-5 justify-center items-center mr-3"
                     onPress={() => setSelectedDateRange('allTime')}
                     style={{
                       backgroundColor: selectedDateRange === 'allTime' ? '#F07900' : '#FAC68E',
@@ -392,14 +382,13 @@ const porcentagemTotal = useCallback((answers) => {
                   </TouchableOpacity>
                 </ScrollView>
               </View>
-              <View className="w-full h-[480px] mt-5
+              <View className="w-full h-[480px] mt-2
               bg-white rounded-3xl items-center -mb-32"
               >
                     <AnimatedText className="text-3xl font-pbold absolute mt-10"
-                    editable={false}
-                    style={{ color: 'black' }}
-                    animatedProps={animatedTextProps}>
-
+                      editable={false}
+                      style={{ color: 'black' }}
+                      animatedProps={animatedTextProps}>
                     </AnimatedText>
 
                     <Text className="absolute mt-20 text-xl font-pbold">
