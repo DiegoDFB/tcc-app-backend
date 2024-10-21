@@ -43,6 +43,8 @@ const Home = () => {
     { nome: "Divisão", acertos: 5, erros: 5, date: '2024-08-01' },
   ];
 
+  const [noData, setNoData] = useState(false)
+
   const answersByDate = categorias.reduce((acc, item) => {
     if (!acc[item.date]) {
       acc[item.date] = [];
@@ -149,6 +151,11 @@ const porcentagemTotal = useCallback((answers) => {
   });
 
   questTotal = [acertosTotal + errosTotal, acertosTotal, errosTotal];
+
+  if (questTotal[0] === 0) {
+    setNoData(true);
+  }
+
   return questTotal;
 }, []);
 
@@ -171,10 +178,10 @@ const porcentagemTotal = useCallback((answers) => {
   const [estadoConexao, setEstadoConexao] = useState(false)
 
   const strokeOffset = useSharedValue(circunference);
+  const number = useSharedValue(0);
 
   const percentage = useDerivedValue(() => {
-    const number = ((circunference - strokeOffset.value) / circunference ) * 100;
-    return withTiming(number, { duration: duration });
+    return Math.round(number.value = ((circunference - strokeOffset.value) / circunference ) * 100).toString();
   });
 
   const animatedCircleProps = useAnimatedProps(() => {
@@ -185,10 +192,7 @@ const porcentagemTotal = useCallback((answers) => {
   });
 
   const animatedTextProps = useAnimatedProps(() => {
-    const roundedPercentage = Math.round(percentage.value);
-    return {
-        text: `${roundedPercentage === 0 ? '0%' : roundedPercentage + '%'}`,
-    };
+    return  { text: `${percentage.value + '%'}`, defaultValue: `${percentage.value + '%'}`}
   });
 
   return <RootSiblingParent>
@@ -336,6 +340,7 @@ const porcentagemTotal = useCallback((answers) => {
             <View className="w-full h-fit mt-3
             bg-white rounded-3xl items-center mb-20"
             >
+              
               <View className="h-[70px] w-[95%]">
                 <ScrollView className="flex-row mt-5"
                 horizontal={true}
@@ -382,77 +387,78 @@ const porcentagemTotal = useCallback((answers) => {
                   </TouchableOpacity>
                 </ScrollView>
               </View>
-              <View className="w-full h-[480px] mt-2
-              bg-white rounded-3xl items-center -mb-32"
-              >
-                    <AnimatedText className="text-3xl font-pbold absolute mt-10"
-                      editable={false}
-                      style={{ color: 'black' }}
-                      animatedProps={animatedTextProps}>
-                    </AnimatedText>
+              {!noData ?
+                <View>
+                <View className="w-full h-[480px] mt-2
+                bg-white rounded-3xl items-center -mb-32"
+                >
+                      <AnimatedText className="text-3xl font-pbold absolute mt-10"
+                        editable={false}
+                        style={{ color: 'black' }}
+                        animatedProps={animatedTextProps}>
+                      </AnimatedText>
 
-                    <Text className="absolute mt-20 text-xl font-pbold">
-                      de acertos
-                    </Text>
-                    
-                    <Svg 
-                    height="50%"
-                    width="50%"
-                    viewBox="0 0 100 100"
-                    className="-mt-10"
-                    >
-                      <Circle 
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      stroke="#E7E7E7"
-                      fill="transparent"
-                      strokeWidth={10} />
-
-                      <AnimatedCircle
-                      animatedProps={animatedCircleProps}
-                      cx="50"
-                      cy="50"
-                      r="45"
-                      fill="transparent"
-                      strokeWidth={10}
-                      strokeDasharray={`${radius * Math.PI * 2}`}
-                      strokeLinecap={'round'} />
-                    </Svg>
-
-                    <Text 
-                    className="text-black text-2xl font-bold mt-48 absolute">
-                      de {questTotal[0]} questões respondidas
-                    </Text>
-
-                    <View className="flex-row items-center mt-10">
-                      <Image
-                      source={icons.check}
-                      className="w-[50px] h-[50px]"
-                      resizeMode="contain"
-                      />
-
-                      <Text
-                      className="text-xl font-pbold ml-5">
-                      {questTotal[1]} acertos
+                      <Text className="absolute mt-20 text-xl font-pbold">
+                        de acertos
                       </Text>
-                    </View>
+                      
+                      <Svg 
+                      height="50%"
+                      width="50%"
+                      viewBox="0 0 100 100"
+                      className="-mt-10"
+                      >
+                        <Circle 
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        stroke="#E7E7E7"
+                        fill="transparent"
+                        strokeWidth={10} />
 
-                    <View className="flex-row items-center mt-5 -ml-6">
-                      <Image
-                      source={icons.x}
-                      className="w-[50px] h-[50px]"
-                      resizeMode="contain"
-                      />
+                        <AnimatedCircle
+                        animatedProps={animatedCircleProps}
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        fill="transparent"
+                        strokeWidth={10}
+                        strokeDasharray={`${radius * Math.PI * 2}`}
+                        strokeLinecap={'round'} />
+                      </Svg>
 
-                      <Text
-                      className="text-xl font-pbold ml-5">
-                      {questTotal[2]} erros
+                      <Text 
+                      className="text-black text-2xl font-bold mt-48 absolute">
+                        de {questTotal[0]} questões respondidas
                       </Text>
-                    </View>
-                
-              </View>
 
+                      <View className="flex-row items-center mt-10">
+                        <Image
+                        source={icons.check}
+                        className="w-[50px] h-[50px]"
+                        resizeMode="contain"
+                        />
+
+                        <Text
+                        className="text-xl font-pbold ml-5">
+                        {questTotal[1]} acertos
+                        </Text>
+                      </View>
+
+                      <View className="flex-row items-center mt-5 -ml-6">
+                        <Image
+                        source={icons.x}
+                        className="w-[50px] h-[50px]"
+                        resizeMode="contain"
+                        />
+
+                        <Text
+                        className="text-xl font-pbold ml-5">
+                        {questTotal[2]} erros
+                        </Text>
+                      </View>
+                  
+                </View>
               {Object.keys(categorias.reduce((acc, item) => {
                 if (!acc[item.nome]) {
                   acc[item.nome] = item;
@@ -471,6 +477,24 @@ const porcentagemTotal = useCallback((answers) => {
               ))}
 
             </View>
+              
+
+            </View>
+            : 
+            <View className="w-full h-[32.5%] mt-3
+            bg-white rounded-3xl items-center mb-20"
+            style={{
+              elevation: 20,
+              shadowColor: '#52006A'
+            }}
+            >
+              <View className="h-full w-[90%] items-center justify-center">
+                <Text className="text-2xl font-pbold text-center">
+                  Nenhuma questão foi respondida neste período de tempo!
+                </Text>
+              </View>
+            </View>
+              }
 
           </View>
         </ScrollView>
@@ -478,7 +502,6 @@ const porcentagemTotal = useCallback((answers) => {
         <StatusBar backgroundColor='#FF8229' 
         style='light' />
       </SafeAreaView>
-      <Toast visible={true} >Hello !</Toast>
     </RootSiblingParent>
 }
 

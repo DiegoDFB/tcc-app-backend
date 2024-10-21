@@ -45,10 +45,10 @@ const ExpandableActionComponent = ({ title, extraStyles, acertos, erros }) => {
   }
 
   const strokeOffset = useSharedValue(circunference);
+  const number = useSharedValue(0);
 
   const percentage = useDerivedValue(() => {
-    const number = ((circunference - strokeOffset.value) / circunference ) * 100;
-    return withTiming(number, { duration: duration });
+    return Math.round(number.value = ((circunference - strokeOffset.value) / circunference ) * 100).toString();
   });
 
   const animatedCircleProps = useAnimatedProps(() => {
@@ -59,9 +59,7 @@ const ExpandableActionComponent = ({ title, extraStyles, acertos, erros }) => {
   });
 
   const animatedTextProps = useAnimatedProps(() => {
-    return {
-      text: `${Math.round(percentage.value)}% `
-    }
+    return  { text: `${percentage.value + '% '}`, defaultValue: `${percentage.value + '% '}`}
   });
 
   return (
