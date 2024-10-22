@@ -25,8 +25,8 @@ const AnimatedText = Animated.createAnimatedComponent(TextInput);
 const Home = () => {
 
   let categorias = [
-    { nome: "Adição", acertos: 0, erros: 0, date: '2024-10-17' },
-    { nome: "Subtração", acertos: 5, erros: 5, date: '2024-10-13' },
+    { nome: "Adição", acertos: 0, erros: 0, date: '2024-10-22' },
+    { nome: "Subtração", acertos: 0, erros: 0, date: '2024-10-22' },
     { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-10-13' },
     { nome: "Divisão", acertos: 5, erros: 5, date: '2024-10-13' },
     { nome: "Adição", acertos: 5, erros: 5, date: '2024-10-09' },
@@ -42,8 +42,6 @@ const Home = () => {
     { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-08-01' },
     { nome: "Divisão", acertos: 5, erros: 5, date: '2024-08-01' },
   ];
-
-  const [noData, setNoData] = useState(false)
 
   const answersByDate = categorias.reduce((acc, item) => {
     if (!acc[item.date]) {
@@ -155,6 +153,9 @@ const porcentagemTotal = useCallback((answers) => {
   if (questTotal[0] === 0) {
     setNoData(true);
   }
+  else {
+    setNoData(false);
+  }
 
   return questTotal;
 }, []);
@@ -175,7 +176,8 @@ const porcentagemTotal = useCallback((answers) => {
 
   const { nome } = useLocalSearchParams();
   const { sobrenome } = useLocalSearchParams();
-  const [estadoConexao, setEstadoConexao] = useState(false)
+  const [estadoConexao, setEstadoConexao] = useState(false);
+  const [noData, setNoData] = useState(false);
 
   const strokeOffset = useSharedValue(circunference);
   const number = useSharedValue(0);
@@ -192,74 +194,78 @@ const porcentagemTotal = useCallback((answers) => {
   });
 
   const animatedTextProps = useAnimatedProps(() => {
-    return  { text: `${percentage.value + '%'}`, defaultValue: `${percentage.value + '%'}`}
+    console.log(noData)
+    return  { text: `${percentage.value + '% '}`, defaultValue: `${percentage.value + '% '}`}
   });
 
   return <RootSiblingParent>
       <SafeAreaView className="bg-white h-full">
         <ScrollView>
-            <Text
-            className="text-3xl font-bold text-white mt-2 pl-2 ml-5
-            text-left bg-third rounded-xl w-[90vw]"
-            style={{
-              elevation: 20,
-              shadowColor: '#52006A'
-            }}
-            >Bem-vindo, {nome}!
-            </Text>
 
-          <View className="w-full items-center min-h-[85vh] px-4">
+          <Text
+          className="text-3xl font-bold text-white mt-2 pl-2 ml-5
+          text-left bg-third rounded-xl w-[90vw]"
+          style={{
+            elevation: 20,
+            shadowColor: '#52006A'
+          }}
+          >Bem-vindo, {nome}!
+          </Text>
 
-          <View className="w-[90vw] h-[210] mt-3
-            justify-around flex-row bg-fifth rounded-2xl"
-            style={{
-              elevation: 20,
-              shadowColor: '#52006A'
-            }}>
-              {estadoConexao ? 
-                <View className="w-[39vw] justify-center">
-                  <Image 
-                    source={images.foxHappy}
-                    className="w-[50vw] -ml-7 absolute"
-                    resizeMode="contain"
-                  />
-                </View>
-              : <View className="w-[39vw] justify-center">
-                  <Image 
-                    source={images.foxHappy}
-                    className="w-[50vw] -ml-7 absolute"
-                    resizeMode="contain"
-                  />
-                </View>}
-              {estadoConexao ? 
-                <View className="w-[45vw] pl-1 rounded-xl h-[20vh] mt-10 justify-center">
-                   <Text
-                      className="text-xl font-bold text-left -ml-3 text-center"
-                      >Seu brinquedo está
-                      </Text>
-                      <View>
-                        <CustomButton 
-                          title="Conectado"
-                          containerStyles="w-[35vw] mt-5 ml-3 border-2 border-third rounded-3xl bg-third"
-                          textStyles="text-white"
-                        />
+          <View className="w-full items-center px-4">
+
+            <View className="w-[90vw] h-[210px] mt-3
+              justify-around flex-row bg-fifth rounded-2xl"
+              style={{
+                elevation: 20,
+                shadowColor: '#52006A'
+              }}>
+                {estadoConexao ? 
+                  <View className="w-[39vw] justify-center">
+                    <Image 
+                      source={images.foxHappy}
+                      className="w-[50vw] -ml-7 absolute"
+                      resizeMode="contain"
+                    />
+                  </View>
+                : <View className="w-[39vw] justify-center">
+                    <Image 
+                      source={images.foxHappy}
+                      className="w-[50vw] -ml-7 absolute"
+                      resizeMode="contain"
+                    />
+                  </View>}
+                {estadoConexao ? 
+                  <View className="w-[45vw] pl-1 rounded-xl h-[20vh] mt-10 justify-center">
+                    <Text
+                        className="text-xl font-bold text-left -ml-3 text-center"
+                        >Seu brinquedo está
+                        </Text>
+                        <View>
+                          <CustomButton 
+                            title="Conectado"
+                            containerStyles="w-[35vw] mt-5 ml-3 border-2 border-third rounded-3xl bg-third"
+                            textStyles="text-white"
+                          />
+                        </View>
+                  </View> :
+                      <View className="w-[39vw] pl-1 rounded-xl h-[22vh] mt-5 items-center">
+                        <Text
+                        className="text-xl font-bold text-left pl-1"
+                        >Parece que você ainda não conectou seu brinquedo!
+                        </Text>
+                        <View>
+                          <CustomButton 
+                            title="Conectar"
+                            handlePress={() => setEstadoConexao(!estadoConexao)}
+                            containerStyles="w-[35vw] mt-2 border-2 border-third rounded-3xl bg-white"
+                            textStyles="text-third"
+                          />
+                        </View>
                       </View>
-                </View> :
-                    <View className="w-[39vw] pl-1 rounded-xl h-[22vh] mt-5 items-center">
-                      <Text
-                      className="text-xl font-bold text-left pl-1"
-                      >Parece que você ainda não conectou seu brinquedo!
-                      </Text>
-                      <View>
-                        <CustomButton 
-                          title="Conectar"
-                          handlePress={() => setEstadoConexao(!estadoConexao)}
-                          containerStyles="w-[35vw] mt-2 border-2 border-third rounded-3xl bg-white"
-                          textStyles="text-third"
-                        />
-                      </View>
-                    </View>
-                  }
+                    }
+              </View>
+            
             </View>
 
             <View className="w-full h-[150px] mt-3
@@ -387,100 +393,99 @@ const porcentagemTotal = useCallback((answers) => {
                   </TouchableOpacity>
                 </ScrollView>
               </View>
-              {!noData ?
-                <View>
-                <View className="w-full h-[480px] mt-2
-                bg-white rounded-3xl items-center -mb-32"
-                >
-                      <AnimatedText className="text-3xl font-pbold absolute mt-10"
-                        editable={false}
-                        style={{ color: 'black' }}
-                        animatedProps={animatedTextProps}>
-                      </AnimatedText>
+                {!noData ?
+                <View className="w-full mt-5
+                bg-white rounded-3xl items-center">
+                  <View className="w-full h-[480px] mt-5
+                  bg-white rounded-3xl items-center -mb-32"
+                  >
+                    <AnimatedText className="text-3xl font-pbold absolute mt-10"
+                    editable={false}
+                    style={{ color: 'black' }}
+                    animatedProps={animatedTextProps}>
+                    </AnimatedText>
 
-                      <Text className="absolute mt-20 text-xl font-pbold">
-                        de acertos
-                      </Text>
-                      
-                      <Svg 
-                      height="50%"
-                      width="50%"
-                      viewBox="0 0 100 100"
-                      className="-mt-10"
-                      >
-                        <Circle 
-                        cx="50"
-                        cy="50"
-                        r="45"
-                        stroke="#E7E7E7"
-                        fill="transparent"
-                        strokeWidth={10} />
+                    <Text className="absolute mt-20 text-xl font-pbold">
+                      de acertos
+                    </Text>
+                        
+                    <Svg 
+                    height="50%"
+                    width="50%"
+                    viewBox="0 0 100 100"
+                    className="-mt-10"
+                    >
+                          <Circle 
+                          cx="50"
+                          cy="50"
+                          r="45"
+                          stroke="#E7E7E7"
+                          fill="transparent"
+                          strokeWidth={10} />
 
-                        <AnimatedCircle
-                        animatedProps={animatedCircleProps}
-                        cx="50"
-                        cy="50"
-                        r="45"
-                        fill="transparent"
-                        strokeWidth={10}
-                        strokeDasharray={`${radius * Math.PI * 2}`}
-                        strokeLinecap={'round'} />
-                      </Svg>
+                          <AnimatedCircle
+                          animatedProps={animatedCircleProps}
+                          cx="50"
+                          cy="50"
+                          r="45"
+                          fill="transparent"
+                          strokeWidth={10}
+                          strokeDasharray={`${radius * Math.PI * 2}`}
+                          strokeLinecap={'round'} />
+                    </Svg>
 
-                      <Text 
-                      className="text-black text-2xl font-bold mt-48 absolute">
-                        de {questTotal[0]} questões respondidas
-                      </Text>
-
-                      <View className="flex-row items-center mt-10">
-                        <Image
-                        source={icons.check}
-                        className="w-[50px] h-[50px]"
-                        resizeMode="contain"
-                        />
-
-                        <Text
-                        className="text-xl font-pbold ml-5">
-                        {questTotal[1]} acertos
+                        <Text 
+                        className="text-black text-2xl font-bold mt-48 absolute">
+                          de {questTotal[0]} questões respondidas
                         </Text>
-                      </View>
 
-                      <View className="flex-row items-center mt-5 -ml-6">
-                        <Image
-                        source={icons.x}
-                        className="w-[50px] h-[50px]"
-                        resizeMode="contain"
-                        />
+                        <View className="flex-row items-center mt-10">
+                          <Image
+                          source={icons.check}
+                          className="w-[50px] h-[50px]"
+                          resizeMode="contain"
+                          />
 
-                        <Text
-                        className="text-xl font-pbold ml-5">
-                        {questTotal[2]} erros
-                        </Text>
-                      </View>
-                  
-                </View>
-              {Object.keys(categorias.reduce((acc, item) => {
-                if (!acc[item.nome]) {
-                  acc[item.nome] = item;
-                }
-                return acc;
-              }, {})).map((nome) => (
-                <ExpandableActionComponent
-                  key={nome}
-                  title={nome}
-                  animatedCirclePropsAdd={animatedCircleProps}
-                  animatedTextPropsAdd={animatedTextProps}
-                  acertos={filteredAnswers[nome] ? filteredAnswers[nome].reduce((acc, item) => acc + item.acertos, 0) : 0}
-                  erros={filteredAnswers[nome] ? filteredAnswers[nome].reduce((acc, item) => acc + item.erros, 0) : 0}
-                  extraStyles={"mt-5"}
-                />
-              ))}
+                          <Text
+                          className="text-xl font-pbold ml-5">
+                          {questTotal[1]} acertos
+                          </Text>
+                        </View>
 
-            </View>
-              
+                        <View className="flex-row items-center mt-5 -ml-6">
+                          <Image
+                          source={icons.x}
+                          className="w-[50px] h-[50px]"
+                          resizeMode="contain"
+                          />
 
-            </View>
-            : 
+                          <Text
+                          className="text-xl font-pbold ml-5">
+                          {questTotal[2]} erros
+                          </Text>
+                        </View>
+                    
+                  </View>
+                
+                  {Object.keys(categorias.reduce((acc, item) => {
+                    if (!acc[item.nome]) {
+                      acc[item.nome] = item;
+                    }
+                    return acc;
+                  }, {})).map((nome) => (
+                    <ExpandableActionComponent
+                      key={nome}
+                      title={nome}
+                      animatedCirclePropsAdd={animatedCircleProps}
+                      animatedTextPropsAdd={animatedTextProps}
+                      acertos={filteredAnswers[nome] ? filteredAnswers[nome].reduce((acc, item) => acc + item.acertos, 0) : 0}
+                      erros={filteredAnswers[nome] ? filteredAnswers[nome].reduce((acc, item) => acc + item.erros, 0) : 0}
+                      extraStyles={"mt-5"}
+                    />
+                    ))}
+
+              </View>
+              :
             <View className="w-full h-[32.5%] mt-3
             bg-white rounded-3xl items-center mb-20"
             style={{
@@ -494,7 +499,7 @@ const porcentagemTotal = useCallback((answers) => {
                 </Text>
               </View>
             </View>
-              }
+            }
 
           </View>
         </ScrollView>
