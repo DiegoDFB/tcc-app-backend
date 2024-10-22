@@ -18,6 +18,7 @@ import interrogation from "../assets/icons/interrogation.png";
 import notebook from "../assets/icons/notebook.png";
 import check from "../assets/icons/check.png";
 import x from "../assets/icons/x.png";
+import arrowDown from "../assets/icons/arrow-down.png"
 
 export default {
   play,
@@ -39,5 +40,6 @@ export default {
   interrogation,
   notebook,
   check,
-  x
+  x,
+  arrowDown
 };

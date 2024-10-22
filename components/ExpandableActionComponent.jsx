@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, View, Text, TextInput, TouchableNativeFeedback } from 'react-native';
-import Animated, { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { useAnimatedProps, useAnimatedStyle, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import Svg, { Circle, err } from 'react-native-svg';
 import { icons } from '../constants';
 import { Image } from 'react-native';
@@ -25,6 +25,7 @@ const ExpandableActionComponent = ({ title, extraStyles, acertos, erros }) => {
 
   const height = useSharedValue(130);
   const opacity = useSharedValue(0);
+  const rotation = useSharedValue(0);
 
   const [showExpandable, setShowExpandable] = useState(true)
 
@@ -33,10 +34,12 @@ const ExpandableActionComponent = ({ title, extraStyles, acertos, erros }) => {
     if (showExpandable) {
       height.value = withTiming(300, {duration: 500});
       opacity.value = withTiming(1, {duration: 500});
+      rotation.value = withTiming(180, { duration: 500 });
     }
     else {
       height.value = withTiming(130, {duration: 500});
       opacity.value = withTiming(0, {duration: 500});
+      rotation.value = withTiming(0, { duration: 500 });
     }
   }
 
@@ -62,80 +65,108 @@ const ExpandableActionComponent = ({ title, extraStyles, acertos, erros }) => {
     return  { text: `${percentage.value + '% '}`, defaultValue: `${percentage.value + '% '}`}
   });
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${rotation.value}deg` }]
+    };
+  });
+
   return (
-    <TouchableNativeFeedback onPress={showExpandableAction} className="w-full h-fit rounded-3xl">
-      <Animated.View className={`w-[94%] bg-white rounded-3xl -mt-60 flex-row ml-3 ${extraStyles}`}
-      style={{
-        height: height,
-        elevation: 10,
-        shadowColor: '#52006A'
-      }}>
-        <Svg height="110px" width="110px" viewBox="0 0 100 100" className="mt-3 ml-2">
-          <Circle
-          cx="50"
-          cy="50"
-          r="45"
-          stroke="#E7E7E7"
-          fill="transparent"
-          strokeWidth={10} />
-          <AnimatedCircle
-          animatedProps={animatedCircleProps}
-          cx="50"
-          cy="50"
-          r="45"
-          fill="transparent"
-          strokeWidth={10}
-          strokeDasharray={`${radius * Math.PI * 2}`}
-          strokeLinecap={'round'} />
-        </Svg>
-        <View className="w-[240] h-[100] justify-center mt-3 ml-3">
-          <Text className="text-2xl font-pbold mb-3">
-          {title}
-          </Text>
-          <AnimatedText
-          animatedProps={animatedTextProps}
-          className="text-xl font-pbold"
-          editable={false}
-          style={{ color: 'black' }}>
-          de acertos
-          </AnimatedText>
-        </View>
-        <View className="w-full h-full absolute mt-36 items-center">
-          <Animated.View className="w-[92%] h-[50%] justify-around"
-          style={{
-            opacity: opacity
-          }}>
-            <View className="flex-row items-center">
-              <Image
-              source={icons.check}
-              className="w-[50px] h-[50px]"
-              resizeMode="contain"
-              />
+    <View
+    style={{ 
+    borderRadius: 30,
+    overflow: 'hidden',
+    backgroundColor: '#0000FF',
+    marginTop: 10,
+    elevation: 10,
+    shadowColor: '#52006A',
+    }}>
+      <TouchableNativeFeedback onPress={showExpandableAction} className="w-full h-fit rounded-3xl">
+        <Animated.View className={`w-[94%] bg-white rounded-3xl flex-row ${extraStyles}`}
+        style={{
+          height: height,
+          elevation: 10,
+          shadowColor: '#52006A'
+        }}>
+          <Svg height="110px" width="110px" viewBox="0 0 100 100" className="mt-3 ml-2">
+            <Circle
+            cx="50"
+            cy="50"
+            r="45"
+            stroke="#E7E7E7"
+            fill="transparent"
+            strokeWidth={10} />
+            <AnimatedCircle
+            animatedProps={animatedCircleProps}
+            cx="50"
+            cy="50"
+            r="45"
+            fill="transparent"
+            strokeWidth={10}
+            strokeDasharray={`${radius * Math.PI * 2}`}
+            strokeLinecap={'round'} />
+          </Svg>
+          <View className="w-[240] h-[100] justify-center mt-3 ml-3">
+            <Text className="text-2xl font-pbold mb-3">
+            {title}
+            </Text>
+            <AnimatedText
+            animatedProps={animatedTextProps}
+            className="text-xl font-pbold"
+            editable={false}
+            style={{ color: 'black' }}>
+            de acertos
+            </AnimatedText>
+          </View>
+          <View className="w-full h-full absolute mt-36 items-center">
+            <Animated.View className="w-[92%] h-[50%] justify-around"
+            style={{
+              opacity: opacity
+            }}>
+              <View className="flex-row items-center">
+                <Image
+                source={icons.check}
+                className="w-[50px] h-[50px]"
+                resizeMode="contain"
+                />
 
-              <Text
-              className="text-xl font-pbold ml-5">
-              {acertos} acertos
-              </Text>
-            </View>
+                <Text
+                className="text-xl font-pbold ml-5">
+                {acertos} acertos
+                </Text>
+              </View>
 
-            <View className="flex-row items-center">
-              <Image
-              source={icons.x}
-              className="w-[50px] h-[50px]"
-              resizeMode="contain"
-              />
+              <View className="flex-row items-center">
+                <Image
+                source={icons.x}
+                className="w-[50px] h-[50px]"
+                resizeMode="contain"
+                />
 
-              <Text
-              className="text-xl font-pbold ml-5">
-              {erros} erros
-              </Text>
-            </View>
+                <Text
+                className="text-xl font-pbold ml-5">
+                {erros} erros
+                </Text>
+              </View>
 
+            </Animated.View>
+            
+          </View>
+
+          <View className="justify-center mr-3 -ml-10 mt-10"
+                style={{
+                    height: 50
+                }}>
+                    <Animated.Image 
+                    source={icons.arrowDown}
+                    className="w-[25px] h-[25px]"
+                    resizeMode="contain"
+                    style={animatedStyle}
+                />
+          </View>
           </Animated.View>
-          
-        </View>
-        </Animated.View>
-    </TouchableNativeFeedback>
+      </TouchableNativeFeedback>
+    </View>
   );
 };
 

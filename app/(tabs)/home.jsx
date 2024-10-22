@@ -1,18 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView, Text, View, Image, Dimensions, TextInput } from 'react-native';
-import { Redirect, router, useLocalSearchParams } from 'expo-router';
-import { useFonts } from 'expo-font'
+import { ScrollView, Text, View, Image, TextInput } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { icons, images } from '../../constants'
 import CustomButton from '../../components/CustomButton';
-import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native';
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
-import Toast from 'react-native-toast-message';
-import Svg, { Circle, err } from 'react-native-svg';
+import Svg, { Circle } from 'react-native-svg';
 import Animated, { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import ExpandableActionComponent from '../../components/ExpandableActionComponent';
+import WelcomeComponent from '../../components/WelcomeComponent';
 
 
 const radius = 45;
@@ -25,22 +23,10 @@ const AnimatedText = Animated.createAnimatedComponent(TextInput);
 const Home = () => {
 
   let categorias = [
-    { nome: "Adição", acertos: 0, erros: 0, date: '2024-10-22' },
-    { nome: "Subtração", acertos: 0, erros: 0, date: '2024-10-22' },
+    { nome: "Adição", acertos: 20, erros: 30, date: '2024-10-22' },
+    { nome: "Subtração", acertos: 15, erros: 25, date: '2024-10-22' },
     { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-10-13' },
     { nome: "Divisão", acertos: 5, erros: 5, date: '2024-10-13' },
-    { nome: "Adição", acertos: 5, erros: 5, date: '2024-10-09' },
-    { nome: "Subtração", acertos: 5, erros: 5, date: '2024-10-09' },
-    { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-10-09' },
-    { nome: "Divisão", acertos: 5, erros: 5, date: '2024-10-09' },
-    { nome: "Adição", acertos: 5, erros: 5, date: '2024-10-01' },
-    { nome: "Subtração", acertos: 5, erros: 5, date: '2024-10-01' },
-    { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-10-01' },
-    { nome: "Divisão", acertos: 5, erros: 5, date: '2024-10-01' },
-    { nome: "Adição", acertos: 5, erros: 5, date: '2024-08-01' },
-    { nome: "Subtração", acertos: 5, erros: 5, date: '2024-08-01' },
-    { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-08-01' },
-    { nome: "Divisão", acertos: 5, erros: 5, date: '2024-08-01' },
   ];
 
   const answersByDate = categorias.reduce((acc, item) => {
@@ -194,157 +180,105 @@ const porcentagemTotal = useCallback((answers) => {
   });
 
   const animatedTextProps = useAnimatedProps(() => {
-    console.log(noData)
     return  { text: `${percentage.value + '% '}`, defaultValue: `${percentage.value + '% '}`}
   });
 
   return <RootSiblingParent>
       <SafeAreaView className="bg-white h-full">
-        <ScrollView>
+          <ScrollView>
 
-          <Text
-          className="text-3xl font-bold text-white mt-2 pl-2 ml-5
-          text-left bg-third rounded-xl w-[90vw]"
-          style={{
-            elevation: 20,
-            shadowColor: '#52006A'
-          }}
-          >Bem-vindo, {nome}!
-          </Text>
+          <WelcomeComponent 
+            nome={nome} 
+            estadoConexao={estadoConexao} 
+            setEstadoConexao={setEstadoConexao} 
+          />
 
-          <View className="w-full items-center px-4">
-
-            <View className="w-[90vw] h-[210px] mt-3
-              justify-around flex-row bg-fifth rounded-2xl"
+            <View className="items-center">
+              <View className="w-[90%] h-[150px] mt-3
+              justify-around flex-row bg-white rounded-3xl"
               style={{
                 elevation: 20,
                 shadowColor: '#52006A'
               }}>
-                {estadoConexao ? 
-                  <View className="w-[39vw] justify-center">
+                <View className="w-[100px] h-[140px]
+                items-center flex-column mt-3"
+                >
+                  <TouchableOpacity 
+                    onPress={ () =>
+                      {
+                        router.push({
+                          pathname:"/profile",
+                          params: { nome: nome, sobrenome: sobrenome } });
+                      }
+                    }
+                    className="w-[100px] h-[100px] rounded-xl
+                    justify-center flex-row bg-lightblue items-center"
+                    style={{
+                      elevation: 10,
+                      shadowColor: '#52006A'
+                    }}
+                  >
                     <Image 
-                      source={images.foxHappy}
-                      className="w-[50vw] -ml-7 absolute"
+                      source={images.perfilHeadphones}
+                      className="w-[80%] h-[80%]"
                       resizeMode="contain"
                     />
-                  </View>
-                : <View className="w-[39vw] justify-center">
+                  </TouchableOpacity>
+                  <Text className="text-xl font-bold">Perfil</Text>
+                </View>
+
+                <View className="w-[100px] h-[140px]
+                items-center flex-column mt-3">
+                  <TouchableOpacity 
+                    onPress={ () => router.push('/sign-in') }
+                    className="w-[100px] h-[100px] rounded-xl
+                    justify-center flex-row bg-lightgreen items-center"
+                    style={{
+                      elevation: 10,
+                      shadowColor: '#52006A'
+                    }}
+                  >
                     <Image 
-                      source={images.foxHappy}
-                      className="w-[50vw] -ml-7 absolute"
+                      source={icons.notebook}
+                      className="w-[80%] h-[80%]"
                       resizeMode="contain"
                     />
-                  </View>}
-                {estadoConexao ? 
-                  <View className="w-[45vw] pl-1 rounded-xl h-[20vh] mt-10 justify-center">
-                    <Text
-                        className="text-xl font-bold text-left -ml-3 text-center"
-                        >Seu brinquedo está
-                        </Text>
-                        <View>
-                          <CustomButton 
-                            title="Conectado"
-                            containerStyles="w-[35vw] mt-5 ml-3 border-2 border-third rounded-3xl bg-third"
-                            textStyles="text-white"
-                          />
-                        </View>
-                  </View> :
-                      <View className="w-[39vw] pl-1 rounded-xl h-[22vh] mt-5 items-center">
-                        <Text
-                        className="text-xl font-bold text-left pl-1"
-                        >Parece que você ainda não conectou seu brinquedo!
-                        </Text>
-                        <View>
-                          <CustomButton 
-                            title="Conectar"
-                            handlePress={() => setEstadoConexao(!estadoConexao)}
-                            containerStyles="w-[35vw] mt-2 border-2 border-third rounded-3xl bg-white"
-                            textStyles="text-third"
-                          />
-                        </View>
-                      </View>
+                  </TouchableOpacity>
+                  <Text className="text-xl font-bold">Aprender</Text>
+                </View>
+
+                <View className="w-[100px] h-[140px]
+                items-center flex-column mt-3">
+                  <TouchableOpacity 
+                    onPress={ () =>
+                      {
+                        router.push({
+                          pathname:"/Ajuda"});
+                      }
                     }
-              </View>
-            
-            </View>
-
-            <View className="w-full h-[150px] mt-3
-            justify-around flex-row bg-white rounded-3xl"
-            style={{
-              elevation: 20,
-              shadowColor: '#52006A'
-            }}>
-              <View className="w-[100px] h-[140px]
-              items-center flex-column mt-3"
-              >
-                <TouchableOpacity 
-                  onPress={ () =>
-                    {
-                      router.push({
-                        pathname:"/profile",
-                        params: { nome: nome, sobrenome: sobrenome } });
-                    }
-                   }
-                  className="w-[100px] h-[100px] rounded-xl
-                  justify-center flex-row bg-lightblue items-center"
-                  style={{
-                    elevation: 10,
-                    shadowColor: '#52006A'
-                  }}
-                >
-                  <Image 
-                    source={images.perfilHeadphones}
-                    className="w-[80%] h-[80%]"
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-                <Text className="text-xl font-bold">Perfil</Text>
-              </View>
-
-              <View className="w-[100px] h-[140px]
-              items-center flex-column mt-3">
-                <TouchableOpacity 
-                  onPress={ () => router.push('/sign-in') }
-                  className="w-[100px] h-[100px] rounded-xl
-                  justify-center flex-row bg-lightgreen items-center"
-                  style={{
-                    elevation: 10,
-                    shadowColor: '#52006A'
-                  }}
-                >
-                  <Image 
-                    source={icons.notebook}
-                    className="w-[80%] h-[80%]"
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-                <Text className="text-xl font-bold">Aprender</Text>
-              </View>
-
-              <View className="w-[100px] h-[140px]
-              items-center flex-column mt-3">
-                <TouchableOpacity 
-                  onPress={ () => router.push('/sign-in') }
-                  className="w-[100px] h-[100px] rounded-xl
-                  justify-center flex-row bg-lightyellow items-center"
-                  style={{
-                    elevation: 10,
-                    shadowColor: '#52006A'
-                  }}
-                >
-                  <Image 
-                    source={icons.interrogation}
-                    className="w-[80%] h-[80%] ml-1"
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-                <Text className="text-xl font-bold">Ajuda</Text>
-              </View>
+                    className="w-[100px] h-[100px] rounded-xl
+                    justify-center flex-row bg-lightyellow items-center"
+                    style={{
+                      elevation: 10,
+                      shadowColor: '#52006A'
+                    }}
+                  >
+                    <Image 
+                      source={icons.interrogation}
+                      className="w-[80%] h-[80%] ml-1"
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                  <Text className="text-xl font-bold">Ajuda</Text>
+                </View>
               
-            </View>
+              </View>
 
-            <View className="w-full h-fit mt-3
-            bg-white rounded-3xl items-center mb-20"
+            
+
+            <View className="w-[90%] h-fit mt-3
+            bg-white rounded-3xl items-center mb-10"
+            
             >
               
               <View className="h-[70px] w-[95%]">
@@ -394,10 +328,10 @@ const porcentagemTotal = useCallback((answers) => {
                 </ScrollView>
               </View>
                 {!noData ?
-                <View className="w-full mt-5
+                <View className="w-full mt-2
                 bg-white rounded-3xl items-center">
-                  <View className="w-full h-[480px] mt-5
-                  bg-white rounded-3xl items-center -mb-32"
+                  <View className="w-full h-[480px]
+                  bg-white rounded-3xl items-center -mb-28"
                   >
                     <AnimatedText className="text-3xl font-pbold absolute mt-10"
                     editable={false}
@@ -480,19 +414,18 @@ const porcentagemTotal = useCallback((answers) => {
                       animatedTextPropsAdd={animatedTextProps}
                       acertos={filteredAnswers[nome] ? filteredAnswers[nome].reduce((acc, item) => acc + item.acertos, 0) : 0}
                       erros={filteredAnswers[nome] ? filteredAnswers[nome].reduce((acc, item) => acc + item.erros, 0) : 0}
-                      extraStyles={"mt-5"}
+                      
                     />
                     ))}
 
               </View>
               :
-            <View className="w-full h-[32.5%] mt-3
-            bg-white rounded-3xl items-center mb-20"
+            <View className="w-full h-[40%] mt-3
+            bg-white rounded-3xl items-center mb-10"
             style={{
               elevation: 20,
               shadowColor: '#52006A'
-            }}
-            >
+            }}>
               <View className="h-full w-[90%] items-center justify-center">
                 <Text className="text-2xl font-pbold text-center">
                   Nenhuma questão foi respondida neste período de tempo!
@@ -501,6 +434,7 @@ const porcentagemTotal = useCallback((answers) => {
             </View>
             }
 
+          </View>
           </View>
         </ScrollView>
 
