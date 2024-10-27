@@ -1,24 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView, Text, View, Image, TextInput } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { ScrollView, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { icons, images } from '../../constants'
-import CustomButton from '../../components/CustomButton';
-import { TouchableOpacity } from 'react-native';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
-import Svg, { Circle } from 'react-native-svg';
-import Animated, { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
-import ExpandableActionComponent from '../../components/ExpandableActionComponent';
+import { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import WelcomeComponent from '../../components/WelcomeComponent';
+import MenuComponent from '../../components/MenuComponent';
+import DateRangeSelector from '../../components/DateRangeSelector';
+import NoDataComponent from '../../components/NoDataComponent';
+import ResultSummary from '../../components/ResultSummary';
 
 
 const radius = 45;
 const circunference = radius * Math.PI * 2;
 const duration = 1000;
-
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-const AnimatedText = Animated.createAnimatedComponent(TextInput);
 
 const Home = () => {
 
@@ -146,20 +142,6 @@ const porcentagemTotal = useCallback((answers) => {
   return questTotal;
 }, []);
 
-  const filterAnswersByDate = (startDate, endDate) => {
-    const filteredAnswers = {};
-    Object.keys(answersByDate).forEach((date) => {
-      if (!startDate && !endDate) {
-        filteredAnswers[date] = answersByDate[date];
-      } else if (date >= startDate && date <= endDate) {
-        filteredAnswers[date] = answersByDate[date];
-      }
-    });
-    return filteredAnswers;
-  };
-
-
-
   const { nome } = useLocalSearchParams();
   const { sobrenome } = useLocalSearchParams();
   const [estadoConexao, setEstadoConexao] = useState(false);
@@ -194,245 +176,35 @@ const porcentagemTotal = useCallback((answers) => {
           />
 
             <View className="items-center">
-              <View className="w-[90%] h-[150px] mt-3
-              justify-around flex-row bg-white rounded-3xl"
-              style={{
-                elevation: 20,
-                shadowColor: '#52006A'
-              }}>
-                <View className="w-[100px] h-[140px]
-                items-center flex-column mt-3"
-                >
-                  <TouchableOpacity 
-                    onPress={ () =>
-                      {
-                        router.push({
-                          pathname:"/profile",
-                          params: { nome: nome, sobrenome: sobrenome } });
-                      }
-                    }
-                    className="w-[100px] h-[100px] rounded-xl
-                    justify-center flex-row bg-lightblue items-center"
-                    style={{
-                      elevation: 10,
-                      shadowColor: '#52006A'
-                    }}
-                  >
-                    <Image 
-                      source={images.perfilHeadphones}
-                      className="w-[80%] h-[80%]"
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                  <Text className="text-xl font-bold">Perfil</Text>
-                </View>
-
-                <View className="w-[100px] h-[140px]
-                items-center flex-column mt-3">
-                  <TouchableOpacity 
-                    onPress={ () => router.push('/sign-in') }
-                    className="w-[100px] h-[100px] rounded-xl
-                    justify-center flex-row bg-lightgreen items-center"
-                    style={{
-                      elevation: 10,
-                      shadowColor: '#52006A'
-                    }}
-                  >
-                    <Image 
-                      source={icons.notebook}
-                      className="w-[80%] h-[80%]"
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                  <Text className="text-xl font-bold">Aprender</Text>
-                </View>
-
-                <View className="w-[100px] h-[140px]
-                items-center flex-column mt-3">
-                  <TouchableOpacity 
-                    onPress={ () =>
-                      {
-                        router.push({
-                          pathname:"/Ajuda"});
-                      }
-                    }
-                    className="w-[100px] h-[100px] rounded-xl
-                    justify-center flex-row bg-lightyellow items-center"
-                    style={{
-                      elevation: 10,
-                      shadowColor: '#52006A'
-                    }}
-                  >
-                    <Image 
-                      source={icons.interrogation}
-                      className="w-[80%] h-[80%] ml-1"
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                  <Text className="text-xl font-bold">Ajuda</Text>
-                </View>
               
-              </View>
-
+              <MenuComponent nome={nome} sobrenome={sobrenome} />
             
 
             <View className="w-[90%] h-fit mt-3
-            bg-white rounded-3xl items-center mb-10"
+            rounded-3xl items-center mb-10"
             
             >
               
-              <View className="h-[70px] w-[95%]">
-                <ScrollView className="flex-row mt-5"
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}>
-                  <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
-                  w-[90px] mb-5 justify-center items-center mr-3"
-                    onPress={() => setSelectedDateRange('today')}
-                    style={{
-                      backgroundColor: selectedDateRange === 'today' ? '#F07900' : '#FAC68E',
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Text>Hoje</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
-                  w-[90px] mb-5 justify-center items-center mr-3"
-                    onPress={() => setSelectedDateRange('thisWeek')}
-                    style={{
-                      backgroundColor: selectedDateRange === 'thisWeek' ? '#F07900' : '#FAC68E',
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Text>Semana</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
-                  w-[90px] mb-5 justify-center items-center mr-3"
-                    onPress={() => setSelectedDateRange('thisMonth')}
-                    style={{
-                      backgroundColor: selectedDateRange === 'thisMonth' ? '#F07900' : '#FAC68E',
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Text>Mês</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="bg-fifth h-[30px] rounded-3xl 
-                  w-[90px] mb-5 justify-center items-center mr-3"
-                    onPress={() => setSelectedDateRange('allTime')}
-                    style={{
-                      backgroundColor: selectedDateRange === 'allTime' ? '#F07900' : '#FAC68E',
-                      borderRadius: 10,
-                    }}
-                  >
-                    <Text>Todos</Text>
-                  </TouchableOpacity>
-                </ScrollView>
+              <DateRangeSelector 
+                selectedDateRange={selectedDateRange} 
+                setSelectedDateRange={setSelectedDateRange} 
+              />
+              
+              <View className="w-full mt-2 rounded-3xl items-center">
+                {!noData ? (
+                  <ResultSummary 
+                    questTotal={questTotal} 
+                    animatedTextProps={animatedTextProps} 
+                    animatedCircleProps={animatedCircleProps} 
+                    categorias={categorias} 
+                    filteredAnswers={filteredAnswers} 
+                  />
+                ) : (
+                  <NoDataComponent
+                  selectedDateRange={selectedDateRange} 
+                  />
+                )}
               </View>
-                {!noData ?
-                <View className="w-full mt-2
-                bg-white rounded-3xl items-center">
-                  <View className="w-full h-[480px]
-                  bg-white rounded-3xl items-center -mb-28"
-                  >
-                    <AnimatedText className="text-3xl font-pbold absolute mt-10"
-                    editable={false}
-                    style={{ color: 'black' }}
-                    animatedProps={animatedTextProps}>
-                    </AnimatedText>
-
-                    <Text className="absolute mt-20 text-xl font-pbold">
-                      de acertos
-                    </Text>
-                        
-                    <Svg 
-                    height="50%"
-                    width="50%"
-                    viewBox="0 0 100 100"
-                    className="-mt-10"
-                    >
-                          <Circle 
-                          cx="50"
-                          cy="50"
-                          r="45"
-                          stroke="#E7E7E7"
-                          fill="transparent"
-                          strokeWidth={10} />
-
-                          <AnimatedCircle
-                          animatedProps={animatedCircleProps}
-                          cx="50"
-                          cy="50"
-                          r="45"
-                          fill="transparent"
-                          strokeWidth={10}
-                          strokeDasharray={`${radius * Math.PI * 2}`}
-                          strokeLinecap={'round'} />
-                    </Svg>
-
-                        <Text 
-                        className="text-black text-2xl font-bold mt-48 absolute">
-                          de {questTotal[0]} questões respondidas
-                        </Text>
-
-                        <View className="flex-row items-center mt-10">
-                          <Image
-                          source={icons.check}
-                          className="w-[50px] h-[50px]"
-                          resizeMode="contain"
-                          />
-
-                          <Text
-                          className="text-xl font-pbold ml-5">
-                          {questTotal[1]} acertos
-                          </Text>
-                        </View>
-
-                        <View className="flex-row items-center mt-5 -ml-6">
-                          <Image
-                          source={icons.x}
-                          className="w-[50px] h-[50px]"
-                          resizeMode="contain"
-                          />
-
-                          <Text
-                          className="text-xl font-pbold ml-5">
-                          {questTotal[2]} erros
-                          </Text>
-                        </View>
-                    
-                  </View>
-                
-                  {Object.keys(categorias.reduce((acc, item) => {
-                    if (!acc[item.nome]) {
-                      acc[item.nome] = item;
-                    }
-                    return acc;
-                  }, {})).map((nome) => (
-                    <ExpandableActionComponent
-                      key={nome}
-                      title={nome}
-                      animatedCirclePropsAdd={animatedCircleProps}
-                      animatedTextPropsAdd={animatedTextProps}
-                      acertos={filteredAnswers[nome] ? filteredAnswers[nome].reduce((acc, item) => acc + item.acertos, 0) : 0}
-                      erros={filteredAnswers[nome] ? filteredAnswers[nome].reduce((acc, item) => acc + item.erros, 0) : 0}
-                      
-                    />
-                    ))}
-
-              </View>
-              :
-            <View className="w-full h-[40%] mt-3
-            bg-white rounded-3xl items-center mb-10"
-            style={{
-              elevation: 20,
-              shadowColor: '#52006A'
-            }}>
-              <View className="h-full w-[90%] items-center justify-center">
-                <Text className="text-2xl font-pbold text-center">
-                  Nenhuma questão foi respondida neste período de tempo!
-                </Text>
-              </View>
-            </View>
-            }
 
           </View>
           </View>

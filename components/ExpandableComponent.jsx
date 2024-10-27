@@ -46,7 +46,7 @@ const ExpandableComponent = ({texto, heig}) => {
                 height: height,
                 borderRadius: 30
             }}>
-                <View className="w-[85%] h-full ml-3 mt-3">
+                <View className="w-[85%] h-full ml-3 mt-2">
                     <Text className="font-pbold text-2xl">
                         {texto}
                     </Text>
