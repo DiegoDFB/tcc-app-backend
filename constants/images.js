@@ -12,7 +12,10 @@ import foxHappy from "../assets/images/foxHappy.png";
 import perfilGlasses from "../assets/images/foxPerfilGlasses.png";
 import perfilHeadphones from "../assets/images/foxPerfilHeadphones.png";
 import foxFemale from "../assets/images/foxFemale.png";
+import foxHappyCircle from "../assets/images/foxHappyCircle.png";
+import aprendizado from "../assets/images/aprendizado.png";
+import foxToy from "../assets/images/foxToy.png"
 
 export default { profile, thumbnail, cards, path, logo, logoSmall, empty, bghome1, homeScreen, foxLogin,
-    foxHappy, perfilGlasses, perfilHeadphones, foxFemale,
+    foxHappy, perfilGlasses, perfilHeadphones, foxFemale, foxHappyCircle, aprendizado, foxToy
  };

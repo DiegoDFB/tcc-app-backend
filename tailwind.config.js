@@ -8,9 +8,10 @@ module.exports = {
         third: "#F07900",
         fourth: "#FAD101",
         fifth: "#FAC68E",
-        lightblue: "#ADE3FD",
-        lightgreen: "#AADC35",
-        lightyellow: "#FFDE6D",
+        lightorange: "#FFF5EE",
+        lightblue: "#CDE0FF",
+        lightgreen: "#C7F4D3",
+        lightyellow: "#FFFFFF",
         secondary: {
           DEFAULT: "#FF9C01",
           100: "#FF9001",
