@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TextInput } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import icons from '../constants/icons';
 import Animated from 'react-native-reanimated';

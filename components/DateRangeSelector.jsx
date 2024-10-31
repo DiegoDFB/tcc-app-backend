@@ -10,13 +10,13 @@ const DateRangeSelector = ({ selectedDateRange, setSelectedDateRange }) => {
   ];
 
   return (
-    <View className="h-[70px] w-[100%] bg-white rounded-3xl pl-2"
+    <View className="h-[70px] w-[90%] bg-white rounded-3xl pl-2"
     style={{ elevation: 10, shadowColor: '#52006A' }}>
-      <ScrollView className="flex-row mt-5" horizontal={true} showsHorizontalScrollIndicator={false}>
+      <View className="flex-row mt-5" horizontal={true} showsHorizontalScrollIndicator={false}>
         {dateRanges.map((range) => (
           <TouchableOpacity
             key={range.value}
-            className="bg-fifth h-[30px] rounded-3xl w-[90px] mb-5 
+            className="bg-fifth h-[30px] rounded-3xl w-[75px] mb-5 
             justify-center items-center mr-3 pt-1"
             onPress={() => setSelectedDateRange(range.value)}
             style={{
@@ -31,7 +31,7 @@ const DateRangeSelector = ({ selectedDateRange, setSelectedDateRange }) => {
             {range.label}</Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </View>
     </View>
   );
 };

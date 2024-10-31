@@ -43,10 +43,6 @@ const ExpandableActionComponent = ({ title, extraStyles, acertos, erros }) => {
     }
   }
 
-  const updateProgress = () => {
-    strokeOffset.value = withTiming(circunference * (1 - newProgress / 100), { duration: 2000 });
-  }
-
   const strokeOffset = useSharedValue(circunference);
   const number = useSharedValue(0);
 
@@ -76,7 +72,6 @@ const ExpandableActionComponent = ({ title, extraStyles, acertos, erros }) => {
     style={{ 
     borderRadius: 30,
     overflow: 'hidden',
-    backgroundColor: '#0000FF',
     marginTop: 10,
     elevation: 10,
     shadowColor: '#52006A',

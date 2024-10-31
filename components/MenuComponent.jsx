@@ -36,7 +36,7 @@ const MenuComponent = ({ nome, sobrenome, selectedDateRange, setSelectedDateRang
         <MenuItemLarge 
           onPress={() => router.push({ pathname: "/Aprender" })}
           imageSource={icons.notebook}
-          label="Lições"
+          label="Exercícios"
           bgColor="bg-lightblue"
           extraStyles={"w-[45%] h-[100%] mt-0 justify-center"}
           exStylesTouch={"h-[90%] w-[100%] mb-2"}

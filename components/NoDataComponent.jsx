@@ -1,4 +1,5 @@
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
+import images from '../constants/images';
 
 const NoDataComponent = ({ selectedDateRange }) => {
 
@@ -18,7 +19,7 @@ const NoDataComponent = ({ selectedDateRange }) => {
       dateText = "";
   }
 
-  return <View className="w-full h-[50%] mt-3 bg-white rounded-3xl items-center mb-14"
+  return <View className="w-[90%] h-[60%] mt-3 bg-white rounded-3xl items-center mb-14"
   style={{ elevation: 10, shadowColor: '#52006A' }}>
       <View className="h-full w-[90%] items-center justify-center">
         <Text className="text-2xl font-pbold text-center">

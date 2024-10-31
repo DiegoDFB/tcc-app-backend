@@ -8,61 +8,54 @@ import CustomButton from '../components/CustomButton';
 import { LinearGradient } from 'expo-linear-gradient';
 import Toast from 'react-native-toast-message';
 import { RootSiblingParent } from "react-native-root-siblings";
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import StartPage from './StartPage';
+import OnboardingScreen from './OnboardingScreen';
+import { useEffect, useState } from 'react';
+import { clearAsyncStorage, getItem } from './utils/asyncStorage';
 
-export default function App(props) {
+const Stack = createNativeStackNavigator();
 
-  const router = useRouter();
+export default function App() {
 
-  return (
-    <>
-    <SafeAreaView className="bg-third h-full">
-      <ScrollView contentContainerStyle={{ height: '100%' }}>
-        <LinearGradient
-          colors={['rgba(250,198,142,1)', 'rgba(240,129,48,1)']}
-          className="w-full h-full absolute"
-        />
+  const [showOnboarding, setShowOnboarding] = useState(null);
 
-        <Image 
-            source={images.homeScreen}
-            className="w-[100vw] h-[400px] mt-8"
-            resizeMode="cover"
-          />
-        <LinearGradient 
-        colors={['rgba(240,129,48,1)', 'rgba(250,198,142,1)']}
-        className="w-full -mt-5 align-bottom items-center min-h-[85vh] px-4 rounded-xl border-2 border-white">
-          
+  useEffect(()=>{
+    checkIfAlreadyOnboarded();
+    clearAsyncStorage();
+  })
 
-          <View className="relative mt-2">
-            <Text className="text-3xl text-white font-bold text-center">
-              Aprendizado e diversão com {''}
-              <Text className="text-fourth">Fellow Fox</Text>
-            </Text>
+  const checkIfAlreadyOnboarded = async ()=>{
+    let onboarded = await getItem('onboarded');
+    if(onboarded==1){
+      setShowOnboarding(false);
+    } else {
+      setShowOnboarding(true);
+    }
+  }
 
-          </View>
+  if(showOnboarding==null){
+    return null;
+  }
 
-          <Text
-          className="text-xl font-bold text-white mt-2 text-center"
-          >Estimule o aprendizado da matemática com lições lúdicas e divertidas.
-          </Text>
-
-          <CustomButton 
-            title="Entrar com Email"
-            handlePress={() => {
-              if (router) {
-                router.push('/sign-in');
-              } else {
-                console.error("Router object is null");
-              }
-            }}
-            containerStyles="w-[60vw] mt-5 bg-white"
-            textStyles="text-third"
-          />
-        </LinearGradient>
-      </ScrollView>
-
-      <StatusBar hidden />
-    </SafeAreaView>
-    <Toast />
-    </>
-  );
+  if(showOnboarding){
+    return (
+      <NavigationContainer independent={true}>
+        <Stack.Navigator initialRouteName='Onboarding'>
+          <Stack.Screen name="Onboarding" options={{headerShown: false}} component={OnboardingScreen} />
+          <Stack.Screen name="StartPage" options={{headerShown: false}} component={StartPage} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  } else {
+    return (
+      <NavigationContainer independent={true}>
+        <Stack.Navigator initialRouteName='StartPage'>
+          <Stack.Screen name="Onboarding" options={{headerShown: false}} component={OnboardingScreen} />
+          <Stack.Screen name="StartPage" options={{headerShown: false}} component={StartPage} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
 }

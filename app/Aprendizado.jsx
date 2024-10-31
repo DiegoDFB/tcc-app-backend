@@ -165,9 +165,9 @@ const Aprendizado = () => {
     <RootSiblingParent>
         <SafeAreaView className="bg-white h-full w-full">
             <ScrollView>
-                <View className="items-center">       
+                <View className="items-center h-full">       
 
-                    <View className="w-[90%] h-fit mt-3
+                    <View className="w-full h-fit
                     rounded-3xl items-center mb-10">
                     
                         <DateRangeSelector 
