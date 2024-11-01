@@ -22,7 +22,7 @@ const MenuComponent = ({ nome, sobrenome, selectedDateRange, setSelectedDateRang
 
       <View className="w-[90%] h-[50vw] mt-5 flex-row bg-white rounded-3xl justify-around p-2"
       style={{ elevation: 5, shadowColor: '#52006A' }}>
-        
+
         <MenuItemLarge 
           onPress={() => router.push({ pathname: "/Aprendizado" })}
           imageSource={images.aprendizado}
@@ -49,7 +49,7 @@ const MenuComponent = ({ nome, sobrenome, selectedDateRange, setSelectedDateRang
       style={{ elevation: 5, shadowColor: '#52006A' }}>
         
         <MenuItem 
-          onPress={() => router.push({ pathname: "/Aprender" })}
+          onPress={() => router.push({ pathname: "/Brinquedo" })}
           imageSource={images.foxToy}
           label="Brinquedo"
           bgColor="bg-lightgreen"
