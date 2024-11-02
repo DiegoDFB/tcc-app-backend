@@ -1,81 +1,56 @@
-import { Text, View } from "react-native"
-import { RootSiblingParent } from "react-native-root-siblings"
-import { SafeAreaView } from "react-native-safe-area-context"
-import { images } from "../constants";
-import MenuItemLarge from "../components/MenuItemLarge";
-import init from 'react_native_mqtt';
+import React, { useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
+import { Client, Message } from 'paho-mqtt';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
-
-const topicsub = "lediclient";
-const topic = "lediserver";
-
-init({
-    size: 10000,
-    storageBackend: AsyncStorage,
-    defaultExpires: 1000 * 3600 * 24,
-    enableCache: true,
-    reconnect: true,
-    sync: {
-    }
-});
 
 const Brinquedo = () => {
+  const [valor, setValor] = useState(null);
 
-    useEffect(() => {
-        console.log("mounted");
-        setIsLED1Disabled(true);
-    }, [])
+  useEffect(() => {
+    // Create a client instance
+    const client = new Client('ws://test.mosquitto.org:8080/mqtt', 'clientId' + new Date().getTime());
 
-    const onMessageArrived =(message)=> {
-        console.log("onMessageArrived: "+message.payloadString);
-        if (message.payloadString == "ledl:pong") {
-            onLED1Connect();
-        }
-    }
+    // Set up the connection lost callback
+    client.onConnectionLost = (responseObject) => {
+      if (responseObject.errorCode !== 0) {
+        console.log('Conexão perdida:', responseObject.errorMessage);
+      }
+    };
 
-    const onLED1Connect =()=>{
-        console.log("led connected");
-        setIsLED1Disabled(false);
-    }
+    // Set up the message arrived callback
+    client.onMessageArrived = (message) => {
+      console.log('Mensagem recebida:', message.payloadString);
+      setValor(message.payloadString);
+    };
 
-    const onConnect =()=> {
-        console.log("onConnect");
-        client.subscribe(topicsub);
-        client.publish(topic, "ping");
-    }
-    
-    const onLight =() => {
-        client.publish(topic, "power");
-        //console.log("onlight":);
-    }
+    // Connect to the MQTT broker
+    client.connect({
+      onSuccess: () => {
+        console.log('Conectado ao broker MQTT!');
+        client.subscribe('seu_topico'); // Subscribe to your topic
+      },
+      useSSL: false,  // Ensure SSL is set to false
+      onFailure: (e) => {
+        console.log('Erro ao conectar:', JSON.stringify(e));
+      },
+      // Remove userName and password if not needed for authentication
+      userName: '', // Use empty string if not needed
+      password: '', // Use empty string if not needed
+    });
 
-    const [isLED1Disabled, setIsLED1Disabled] = useState(0);
-    const client = new Paho.MQTT.Client('133.211.13.211', 9001, 'clientname');
-    client.onMessageArrived = onMessageArrived;
-    client.connect({ onSuccess:onConnect, useSSL: false, userName: 'mqttusername', password: 'mqttpassword'});
+    // Clean up on component unmount
+    return () => {
+      if (client.isConnected()) {
+        client.disconnect();
+      }
+    };
+  }, []);
 
-    return (
-    <RootSiblingParent>
-        <SafeAreaView className="bg-white h-full w-full">
-                <View className="items-center h-[30%]">       
-                    <Text>Isaac cabeçudo</Text>
+  return (
+    <View>
+      <Text>Valor recebido do ESP32: {valor}</Text>
+    </View>
+  );
+};
 
-                    <MenuItemLarge 
-                    disabled={isLED1Disabled}
-                    onPress={onLight}
-                    imageSource={images.foxToy}
-                    label="Conectar"
-                    bgColor="bg-lightblue"
-                    extraStyles={"w-[45%] h-[100%] mt-0 justify-center"}
-                    exStylesTouch={"h-[90%] w-[100%] mb-2"}
-                    exStylesImage={"h-[70%] w-[70%] mt-3"}
-                    />
-                </View>
-        </SafeAreaView>
-
-    </RootSiblingParent>
-    )
-}
-
-export default Brinquedo
+export default Brinquedo;
