@@ -17,12 +17,7 @@ const duration = 1000;
 
 const Aprendizado = () => {
 
-    let categorias = [
-        { nome: "Adição", acertos: 20, erros: 30, date: '2024-10-22' },
-        { nome: "Subtração", acertos: 15, erros: 25, date: '2024-10-22' },
-        { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-10-13' },
-        { nome: "Divisão", acertos: 5, erros: 5, date: '2024-10-13' },
-      ];
+  const [categorias, setCategorias] = useState([]);
     
       const answersByDate = categorias.reduce((acc, item) => {
         if (!acc[item.date]) {
@@ -37,6 +32,17 @@ const Aprendizado = () => {
       const [questTotal, setQuestTotal] = useState([0, 0, 0]);
     
       useLayoutEffect(() => {
+
+        const fetchCategorias = async () => {
+          const storedCategorias = await AsyncStorage.getItem('categorias');
+          if (storedCategorias) {
+            setCategorias(JSON.parse(storedCategorias));
+          }
+        };
+    
+        fetchCategorias();
+
+        console.log(categorias)
     
         if (Object.keys(answersByDate).length === 0) {
           return;

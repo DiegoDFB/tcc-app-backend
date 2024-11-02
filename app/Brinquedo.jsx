@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { Client } from 'paho-mqtt';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Brinquedo = () => {
   const [resultados, setResultados] = useState([]);
+
 
   useEffect(() => {
     // Cria uma instância do cliente MQTT
@@ -42,47 +44,48 @@ const Brinquedo = () => {
     };
   }, []);
 
-  const processMessage = (message) => {
+  const processMessage = async (message) => {
     console.log('Processando a mensagem:', message); // Log da mensagem recebida
-
+  
     // Obtém a data atual do dispositivo
     const currentDate = new Date(); // Data e hora atuais
-
+    const formattedDate = currentDate.toISOString().split('T')[0]; // Formata a data atual no formato YYYY-MM-DD
+  
     // Divide a mensagem em linhas
     const lines = message.split('\n').filter(line => line.trim() !== ''); // Remove linhas vazias
-    const resultadosProcessados = lines.map(line => {
+    
+    // Cria um array para armazenar as categorias
+    let categorias = lines.map(line => {
       const parts = line.split(' - ');
-
+  
       // Verifica se a linha contém todas as partes necessárias
       if (parts.length === 2) {
-        const tipo = parts[0].trim(); // Tipo da operação
+        const nome = parts[0].trim(); // Tipo da operação
         const resultados = parts[1].split(',').map(part => part.trim()); // Separar acertos e erros
-        const acertos = resultados[0]; // Primeiro valor é acertos
-        const erros = resultados[1]; // Segundo valor é erros
-        
-        // Formata a data atual para exibição
-        const formattedDate = `${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
-
+        const acertos = parseInt(resultados[0]); // Primeiro valor é acertos
+        const erros = parseInt(resultados[1]); // Segundo valor é erros
+  
         return {
-          tipo,
+          nome,
           acertos,
           erros,
-          data: formattedDate, // Inclui a data atual formatada
+          date: formattedDate, // Inclui a data atual formatada
         };
       } else {
         // Retorna um objeto vazio caso a linha não esteja no formato esperado
         return {};
       }
     }).filter(result => Object.keys(result).length > 0); // Remove resultados vazios
-
-    console.log('Resultados processados:', resultadosProcessados); // Log dos resultados processados
-    setResultados(resultadosProcessados);
+  
+    console.log('Categorias processadas:', categorias); // Log das categorias processadas
+    setResultados(categorias); // Atualiza o estado com as categorias
+    await AsyncStorage.setItem('categorias', JSON.stringify(categorias));
   };
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <Text style={styles.itemText}>
-        {item.tipo}: {item.acertos} acertos, {item.erros} erros, Data: {item.data}
+        {item.nome}: {item.acertos} acertos, {item.erros} erros, Data: {item.date}
       </Text>
     </View>
   );
