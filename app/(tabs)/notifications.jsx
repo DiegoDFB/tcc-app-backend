@@ -89,10 +89,10 @@ const Home = () => {
 
   const handleAddNotification = async () => {
     const newNotification = {
-      id: 'notification-5',
+      id: 'notif-1',
       title: 'New Notification 3',
       message: 'This is a new notification 2',
-      date: '2 dias atrás'
+      date: 'Hoje'
     };
     await addNotification(newNotification);
     const updatedNotifications = await getNotifications();
@@ -110,8 +110,6 @@ const Home = () => {
   return (
     <SafeAreaView className="bg-white h-full">
       {/* ... other components ... */}
-      <Button title="Add Notification" onPress={handleAddNotification} />
-      <Button title="Clear All" onPress={handleClearNotifications} />
       <View className="w-full items-center -mt-3">
         {sortedNotifications.reduce((acc, notification, index) => {
           if (index === 0 || notification.date !== sortedNotifications[index - 1].date) {
@@ -132,6 +130,8 @@ const Home = () => {
           );
           return acc;
         }, [])}
+
+        <Text className="font-pbold text-2xl mt-52">Página em Desenvolvimento!</Text>
       </View>
     </SafeAreaView>
   );

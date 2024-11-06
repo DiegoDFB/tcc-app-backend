@@ -91,14 +91,7 @@ const Brinquedo = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Resultados do Quiz:</Text>
-      <FlatList
-        data={resultados}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
-    </View>
+    <Text className="font-pbold text-2xl mt-52 ml-4">Página em Desenvolvimento!</Text>
   );
 };
 

@@ -10,7 +10,7 @@ const WelcomeComponent = ({ nome, estadoConexao, setEstadoConexao }) => {
         className="text-2xl mt-3 pl-2
         rounded-xl"
       >
-        Bem-vindo, {nome}!
+        Bem-vindo, Visitante!
       </Text>
 
       <Text

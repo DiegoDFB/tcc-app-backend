@@ -9,6 +9,7 @@ import { useCallback, useLayoutEffect, useState } from "react";
 import { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from "react-native-reanimated";
 import ResultSummary from "../components/ResultSummary";
 import NoDataComponent from "../components/NoDataComponent";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const radius = 45;
@@ -17,7 +18,12 @@ const duration = 1000;
 
 const Aprendizado = () => {
 
-  const [categorias, setCategorias] = useState([]);
+  let categorias = [
+    { nome: "Adição", acertos: 20, erros: 30, date: '2024-11-06' },
+    { nome: "Subtração", acertos: 15, erros: 25, date: '2024-11-06' },
+    { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-11-01' },
+    { nome: "Divisão", acertos: 5, erros: 5, date: '2024-11-01' },
+  ];
     
       const answersByDate = categorias.reduce((acc, item) => {
         if (!acc[item.date]) {
@@ -33,16 +39,8 @@ const Aprendizado = () => {
     
       useLayoutEffect(() => {
 
-        const fetchCategorias = async () => {
-          const storedCategorias = await AsyncStorage.getItem('categorias');
-          if (storedCategorias) {
-            setCategorias(JSON.parse(storedCategorias));
-          }
-        };
-    
-        fetchCategorias();
+      
 
-        console.log(categorias)
     
         if (Object.keys(answersByDate).length === 0) {
           return;

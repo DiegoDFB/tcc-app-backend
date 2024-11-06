@@ -7,32 +7,7 @@ const Ajuda = () => {
     return (
     <RootSiblingParent>
         <SafeAreaView className="bg-white h-full w-full">
-            <ScrollView>
-
-                <View className="bg-white items-center justify-center w-full h-[100px]">
-                    <Text className="font-pbold text-3xl">
-                        Perguntas Frequentes
-                    </Text>
-                </View>
-
-                <View className="bg-white h-[1000px] w-full items-center">
-                    <ExpandableComponent 
-                    texto={"Como conectar o brinquedo ao aplicativo?"}
-                    heig={82}
-                    />
-
-                    <ExpandableComponent 
-                    texto={"Como utilizar o brinquedo?"}
-                    heig={82}
-                    />
-
-                    <ExpandableComponent 
-                    texto={"Pergunta"}
-                    heig={50}
-                    />
-                </View>
-
-            </ScrollView>
+            <Text className="font-pbold text-2xl mt-52 ml-4">Página em Desenvolvimento!</Text>
         </SafeAreaView>
 
     </RootSiblingParent>

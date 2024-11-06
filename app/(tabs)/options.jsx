@@ -12,23 +12,15 @@ const Options = () => {
   const [notifications, setNotifications] = useState(true);
 
   useEffect(() => {
-    async function getDarkMode() {
-      const storedDarkMode = await AsyncStorage.getItem('darkMode');
-      if (storedDarkMode) {
-        setDarkMode(storedDarkMode === 'true');
-      }
-    }
-    getDarkMode();
+
   }, []);
 
   const handleDarkModeToggle = async () => {
     setDarkMode(!darkMode);
-    await AsyncStorage.setItem('darkMode', darkMode ? 'true' : 'false');
   };
 
   const handleNotificationsToggle = async () => {
     setNotifications(!notifications);
-    await AsyncStorage.setItem('notifications', notifications ? 'true' : 'false');
   };
 
   return (

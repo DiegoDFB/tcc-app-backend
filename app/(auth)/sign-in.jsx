@@ -69,7 +69,7 @@ const SignIn = () => {
             >Entre em sua conta
             </Text>
             <Formik
-              initialValues={{ email: "difrancisblanco@gmail.com", password: "didi2006" }}
+              initialValues={{ email: "VisitanteIndustrial@email.com", password: "SenhaPadrão" }}
               onSubmit={handleLogin}
               validationSchema={validationSchema}
             >

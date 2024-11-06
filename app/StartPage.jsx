@@ -36,7 +36,7 @@ export default function StartPage() {
 
       <View className="w-[90%] h-[70%] items-center justify-around flex-row -mt-5">
         <MenuItemLarge 
-          onPress={() => router.push({ pathname: "/Aprender" })}
+          onPress={() => router.push({ pathname: "/sign-in" })}
           imageSource={icons.check}
           label="Vamos lá!"
           bgColor="bg-white"
