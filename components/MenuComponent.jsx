@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import MenuItem from './MenuItem';
 import MenuItemLarge from './MenuItemLarge';
 
-const MenuComponent = ({ nome, sobrenome, selectedDateRange, setSelectedDateRange }) => {
+const MenuComponent = ({ nome, sobrenome }) => {
   const router = useRouter();
 
   return (
@@ -20,7 +20,7 @@ const MenuComponent = ({ nome, sobrenome, selectedDateRange, setSelectedDateRang
 
       </View>
 
-      <View className="w-[90%] h-[50vw] mt-5 flex-row bg-white rounded-3xl justify-around p-2"
+      <View className="w-[90%] h-[50vw] mt-12 flex-row bg-white rounded-3xl justify-around p-2"
       style={{ elevation: 5, shadowColor: '#52006A' }}>
 
         <MenuItemLarge 
@@ -34,9 +34,9 @@ const MenuComponent = ({ nome, sobrenome, selectedDateRange, setSelectedDateRang
         />
 
         <MenuItemLarge 
-          onPress={() => router.push({ pathname: "/Aprender" })}
-          imageSource={icons.notebook}
-          label="Exercícios"
+          onPress={() => router.push({ pathname: "/Brinquedo" })}
+          imageSource={images.foxToy}
+          label="Brinquedo"
           bgColor="bg-lightblue"
           extraStyles={"w-[45%] h-[100%] mt-0 justify-center"}
           exStylesTouch={"h-[90%] w-[100%] mb-2"}
@@ -49,17 +49,17 @@ const MenuComponent = ({ nome, sobrenome, selectedDateRange, setSelectedDateRang
       style={{ elevation: 5, shadowColor: '#52006A' }}>
         
         <MenuItem 
-          onPress={() => router.push({ pathname: "/Brinquedo" })}
-          imageSource={images.foxToy}
-          label="Brinquedo"
-          bgColor="bg-lightgreen"
-        />
-
-        <MenuItem 
           onPress={() => router.push({ pathname: "/Perfil", params: { nome: nome, sobrenome: sobrenome } })}
           imageSource={images.perfilHeadphones}
           label="Perfil"
           bgColor="bg-lightblue"
+        />
+
+        <MenuItem 
+          onPress={() => router.push({ pathname: "/options" })}
+          imageSource={icons.config}
+          label="Opções"
+          bgColor="bg-lightgreen"
         />
 
         <MenuItem 

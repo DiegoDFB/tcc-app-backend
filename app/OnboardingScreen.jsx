@@ -2,19 +2,21 @@ import { View, Text, Dimensions, Image } from 'react-native'
 import React from 'react'
 import Onboarding from 'react-native-onboarding-swiper';
 import LottieView from 'lottie-react-native';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import { setItem } from './utils/asyncStorage';
 import { images } from '../constants';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const OnboardingScreen = () => {
+
+    const router = useRouter();
 
     const navigation = useNavigation();
 
     const handleDone = ()=>{
-        navigation.navigate('StartPage');
+        router.push({ pathname: "/sign-in" })
         setItem('onboarded', '1');
     }
 

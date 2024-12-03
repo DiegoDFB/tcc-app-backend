@@ -3,8 +3,8 @@ import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
-import WelcomeComponent from '../../components/WelcomeComponent';
-import MenuComponent from '../../components/MenuComponent';
+import WelcomeComponent from '../components/WelcomeComponent';
+import MenuComponent from '../components/MenuComponent';
 
 const Home = () => {
 

@@ -5,7 +5,7 @@ import MenuItem from "../components/MenuItem"
 import icons from '../constants/icons';
 import { router, useLocalSearchParams } from "expo-router";
 import DateRangeSelector from "../components/DateRangeSelector";
-import { useCallback, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { useAnimatedProps, useDerivedValue, useSharedValue, withTiming } from "react-native-reanimated";
 import ResultSummary from "../components/ResultSummary";
 import NoDataComponent from "../components/NoDataComponent";
@@ -18,13 +18,12 @@ const duration = 1000;
 
 const Aprendizado = () => {
 
-  let categorias = [
-    { nome: "Adição", acertos: 20, erros: 30, date: '2024-11-06' },
-    { nome: "Subtração", acertos: 15, erros: 25, date: '2024-11-06' },
-    { nome: "Multiplicação", acertos: 5, erros: 5, date: '2024-11-01' },
-    { nome: "Divisão", acertos: 5, erros: 5, date: '2024-11-01' },
-  ];
-    
+      const [categorias, setCategorias] = useState([]); // Estado para armazenar as categorias
+      const [selectedDateRange, setSelectedDateRange] = useState('today');
+      const [filteredAnswers, setFilteredAnswers] = useState({});
+      const [questTotal, setQuestTotal] = useState([0, 0, 0]);
+
+      
       const answersByDate = categorias.reduce((acc, item) => {
         if (!acc[item.date]) {
           acc[item.date] = [];
@@ -33,15 +32,8 @@ const Aprendizado = () => {
         return acc;
       }, {});
     
-      const [selectedDateRange, setSelectedDateRange] = useState('today');
-      const [filteredAnswers, setFilteredAnswers] = useState({});
-      const [questTotal, setQuestTotal] = useState([0, 0, 0]);
-    
       useLayoutEffect(() => {
 
-      
-
-    
         if (Object.keys(answersByDate).length === 0) {
           return;
         }
@@ -164,6 +156,28 @@ const Aprendizado = () => {
       const animatedTextProps = useAnimatedProps(() => {
         return  { text: `${percentage.value + '% '}`, defaultValue: `${percentage.value + '% '}`}
       });
+
+      const carregarDados = async () => {
+        try {
+          const jsonData = await AsyncStorage.getItem('@dados_quiz');
+          if (jsonData) {
+            const data = JSON.parse(jsonData);
+            setCategorias(data); // Atualiza o estado das categorias
+            console.log('Dados carregados:', data);
+            setNoData(false);
+          } else {
+            console.log('Nenhum dado encontrado no AsyncStorage');
+            setNoData(true);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar dados do AsyncStorage:', error);
+        }
+      };
+    
+      // Carrega os dados ao montar o componente
+      useEffect(() => {
+        carregarDados();
+      }, []);
 
     return (
     <RootSiblingParent>

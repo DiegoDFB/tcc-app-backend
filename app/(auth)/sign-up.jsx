@@ -32,7 +32,7 @@ const SignUp = () => {
       if (response.data.success) {
         Alert.alert("Sucesso", 'Sua conta foi criada com sucesso.');
         router.push({
-          pathname:"/(tabs)/home",
+          pathname:"/home",
           params: { nome: values.primeiroNome } });
       }
     } catch (error) {

@@ -17,14 +17,6 @@ const validationSchema = Yup.object().shape({
   password: Yup.string().required('É obrigatório inserir uma senha').min(4, 'A senha deve ter pelo menos 4 caracteres').label("Password"),
 })
 
-const showToast = () => {
-  Toast.show({
-    type: 'success',
-    text1: 'Login feito com sucesso',
-    text2: 'Seja bem-vindo! 👋'
-  });
-}
-
 const SignIn = () => {
 
   const router = useRouter();
@@ -33,7 +25,7 @@ const SignIn = () => {
 
   const handleLogin = async (values) => {
     router.push({
-      pathname:"/(tabs)/home"});
+      pathname:"/home"});
 /*
     try {
       const response = await axios.post('http://192.168.0.146:3000/login', { ...values });
@@ -69,7 +61,7 @@ const SignIn = () => {
             >Entre em sua conta
             </Text>
             <Formik
-              initialValues={{ email: "VisitanteIndustrial@email.com", password: "SenhaPadrão" }}
+              initialValues={{ email: "a@a", password: "1234" }}
               onSubmit={handleLogin}
               validationSchema={validationSchema}
             >
