@@ -8,6 +8,7 @@ import {
   Modal,
   Animated,
   StyleSheet,
+  Alert
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { icons } from '../constants';
@@ -40,11 +41,11 @@ const Options = () => {
     try {
       await AsyncStorage.removeItem('@dados_quiz');
       closeModal();
-      alert('Os dados de estatísticas foram limpos com sucesso!');
+      Alert.alert('Aviso', 'Dados de estatísticas excluídos.');
     } catch (error) {
       console.error('Erro ao limpar os dados de estatísticas:', error);
       closeModal();
-      alert('Não foi possível limpar os dados de estatísticas.');
+      Alert.alert('Erro', 'Não foi possível limpar os dados de estatísticas.');
     }
   };
 
@@ -57,10 +58,10 @@ const Options = () => {
             <Text className="text-3xl font-pbold" style={{ color: '#333' }}>Opções</Text>
           </View>
           {/* Back Button */}
-          <View className="w-full h-[100px] absolute items-start justify-center ml-5">
+          <View className="w-full h-[100px] absolute items-start justify-center ml-5 -mt-1">
             <TouchableOpacity
               onPress={() => {
-                router.push({ pathname: '/home' });
+                router.push({ pathname: "/home", params: { nome: nome, sobrenome: sobrenome, email: email } })
               }}
               className="w-[30px] h-[30px]"
             >
@@ -108,7 +109,6 @@ const Options = () => {
         </View>
       </ScrollView>
 
-      {/* Custom Modal */}
       {modalVisible && (
         <View style={styles.modalOverlay}>
           <Animated.View style={[styles.modalContent, { transform: [{ translateY: slideAnim }] }]}>

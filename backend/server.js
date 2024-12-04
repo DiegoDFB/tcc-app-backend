@@ -28,7 +28,8 @@ app.post('/login', (req, res) => {
       res.json({
         success: true,
         nome: userData.nome,
-        sobrenome: userData.sobrenome
+        sobrenome: userData.sobrenome,
+        email: userData.email
       });
     } else {
       res.status(401).json({ error: 'Email ou senha incorretos' });

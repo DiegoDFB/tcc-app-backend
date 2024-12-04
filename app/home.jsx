@@ -10,6 +10,7 @@ const Home = () => {
 
   const { nome } = useLocalSearchParams();
   const { sobrenome } = useLocalSearchParams();
+  const { email } = useLocalSearchParams();
   const [estadoConexao, setEstadoConexao] = useState(false);
 
   return <RootSiblingParent>
@@ -21,7 +22,7 @@ const Home = () => {
             setEstadoConexao={setEstadoConexao} 
           />
 
-          <MenuComponent nome={nome} sobrenome={sobrenome} />
+          <MenuComponent nome={nome} sobrenome={sobrenome} email={email} />
         </View>
       </SafeAreaView>
     </RootSiblingParent>

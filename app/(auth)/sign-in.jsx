@@ -3,12 +3,11 @@ import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from '../../constants'
 import CustomButton from '../../components/CustomButton'
-import { Link, router, useRouter } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { icons } from '../../constants'
 import axios from 'axios';
-import Toast from 'react-native-toast-message'
 import { RootSiblingParent } from "react-native-root-siblings";
 
 
@@ -24,16 +23,13 @@ const SignIn = () => {
   const [showPassword, setshowPassword] = useState(false)
 
   const handleLogin = async (values) => {
-    router.push({
-      pathname:"/home"});
-/*
     try {
       const response = await axios.post('http://192.168.0.146:3000/login', { ...values });
       if (response?.data?.success) {
         if (router && router.push) {
           router.push({
-            pathname:"/(tabs)/home",
-            params: { nome: response?.data?.nome, sobrenome: response?.data?.sobrenome } });
+            pathname:"/home",
+            params: { nome: response?.data?.nome, sobrenome: response?.data?.sobrenome, email: response?.data?.email } });
         } else {
           console.error("Router object is null");
         }
@@ -41,11 +37,10 @@ const SignIn = () => {
         alert(response?.data?.error || 'Email ou senha incorretos. Tente novamente.');
       }
     }  catch (error) {
-      console.error(error);
       Alert.alert("Erro", 'Email ou senha incorretos. Tente novamente.');
     }
-    */
   };
+
   return <RootSiblingParent>
       <SafeAreaView className="bg-white h-full">
         <ScrollView>
@@ -139,7 +134,6 @@ const SignIn = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
-      <Toast visible={true} >Hello !</Toast>
     </RootSiblingParent>
 }
 

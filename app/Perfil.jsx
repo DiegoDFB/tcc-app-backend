@@ -13,6 +13,7 @@ const Profile = () => {
 
   const { nome } = useLocalSearchParams();
   const { sobrenome } = useLocalSearchParams();
+  const { email } = useLocalSearchParams();
 
   const desconectar = async (values) => {
     router.push("/sign-in");
@@ -97,19 +98,35 @@ const Profile = () => {
   return (
     <SafeAreaView className="bg-white h-full items-center">
       <ScrollView>
-
-        <View className="w-full h-[100px] bg-white">
-          <View className="w-full h-[100px] items-center justify-center">
-            <Text className="text-3xl font-pbold">
-            Perfil
-            </Text>
-          </View>
-        </View>
+        {/* Header */}
+        <View className="w-full h-[100px] items-center justify-center">
+                    <Text className="text-3xl font-pbold" style={{ color: '#333' }}>Perfil</Text>
+                </View>
+                {/* Back Button */}
+                <View className="w-full h-[100px] absolute items-start justify-center ml-5 -mt-1">
+                    <TouchableOpacity
+                    onPress={() => {
+                      router.push({ pathname: "/home", params: { nome: nome, sobrenome: sobrenome, email: email } })
+                    }}
+                    className="w-[30px] h-[30px]"
+                    >
+                    <Image
+                        source={icons.leftArrow}
+                        className="w-full h-full"
+                        resizeMode="contain"
+                        style={{ tintColor: '#333' }}
+                    />
+                    </TouchableOpacity>
+                </View>
 
         {selecting ?
         <View>
           <View className="w-[95vw] h-[300px] items-center justify-around
-          rounded-3xl flex-row bg-fifth">
+          rounded-3xl flex-row bg-fifth"
+          style={{
+            elevation: 10,
+            shadowColor: '#52006A'
+          }}>
           {firstSelect ?
             <TouchableOpacity className="w-[10vw] h-[5vh]"
             onPress={subPic}>
@@ -216,17 +233,35 @@ const Profile = () => {
               />
             </TouchableOpacity>
 
-            <Text className="text-3xl absolute pb-5 font-pbold">
-            {nome} {sobrenome}
-          </Text>
           </View>
         </View>
         }
+
+        <View className="bg-fifth mt-5 rounded-2xl w-[95vw] h-[400px] items-center">
+          <Text className="font-pbold text-3xl mt-10">
+           Nome:
+          </Text>
+          <Text className="font-psemibold text-2xl mt-2">
+           {nome}
+          </Text>
+          <Text className="font-pbold text-3xl mt-10">
+            Sobrenome:
+          </Text>
+          <Text className="font-psemibold text-2xl mt-2">
+           {sobrenome}
+          </Text>
+          <Text className="font-pbold text-3xl mt-10">
+           E-mail: 
+          </Text>
+          <Text className="font-psemibold text-2xl mt-2">
+           {email}
+          </Text>
+        </View>
         
         <CustomButton
           title="Desconectar"
           handlePress={desconectar}
-          containerStyles="mt-10"
+          containerStyles="mt-10 mb-10"
         />
       </ScrollView>
     </SafeAreaView>

@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import MenuItem from './MenuItem';
 import MenuItemLarge from './MenuItemLarge';
 
-const MenuComponent = ({ nome, sobrenome }) => {
+const MenuComponent = ({ nome, sobrenome, email }) => {
   const router = useRouter();
 
   return (
@@ -49,7 +49,7 @@ const MenuComponent = ({ nome, sobrenome }) => {
       style={{ elevation: 5, shadowColor: '#52006A' }}>
         
         <MenuItem 
-          onPress={() => router.push({ pathname: "/Perfil", params: { nome: nome, sobrenome: sobrenome } })}
+          onPress={() => router.push({ pathname: "/Perfil", params: { nome: nome, sobrenome: sobrenome, email: email } })}
           imageSource={images.perfilHeadphones}
           label="Perfil"
           bgColor="bg-lightblue"
